@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單管理系統 | Premium Order System</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #64748b;
+            --success: #10b981;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4f46e5, #9333ea);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--text-main);
+        }
+
+        .section-title i {
+            margin-right: 12px;
+            color: var(--primary);
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), #818cf8);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+            transform: scale(1.02);
+        }
+
+        .btn-refresh {
+            background: white;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .btn-refresh:hover {
+            background: #f8fafc;
+            border-color: var(--primary);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .btn-danger {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-success-soft {
+            background: #f0fdf4;
+            color: #22c55e;
+        }
+
+        .btn-success-soft:hover {
+            background: #22c55e;
+            color: white;
+        }
+
+        /* Order List Styling */
+        .order-card {
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .order-card.deleting {
+            transform: translateX(100px);
+            opacity: 0;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .order-id-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .order-id {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .order-status {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-created {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+        }
+
+        .info-value {
+            font-weight: 600;
+        }
+
+        .order-items {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .total-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .action-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Toast / Notification Styling */
+        #notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            background: var(--text-main);
+            color: white;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header class="animate-fade">
+            <h1><i class="fas fa-cube"></i> Order System</h1>
+            <p class="subtitle">Spring Boot & Thymeleaf 現代化架構展示</p>
+        </header>
+
+        <!-- 建立訂單卡片 -->
+        <div class="glass-card animate-fade" style="animation-delay: 0.1s;">
+            <div class="section-title">
+                <i class="fas fa-plus-circle"></i> 建立新訂單
+            </div>
+
+            <div class="form-group">
+                <label for="newCustomerName">客戶名稱</label>
+                <input type="text" id="newCustomerName" placeholder="請輸入姓名" value="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label>商品詳細資訊</label>
+                <div class="input-row">
+                    <input type="text" id="productName" placeholder="商品名稱" value="MacBook Pro">
+                    <input type="number" id="price" placeholder="價格" value="2500">
+                    <input type="number" id="quantity" placeholder="數量" value="1">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="createOrder()">
+                <i class="fas fa-paper-plane"></i> 確認送出訂單
+            </button>
+        </div>
+
+        <!-- 訂單列表區塊 -->
+        <div class="glass-card animate-fade" style="animation-delay: 0.2s;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="section-title" style="margin-bottom: 0;">
+                    <i class="fas fa-list-ul"></i> 訂單列表
+                </div>
+                <button class="btn btn-refresh" onclick="fetchAllOrders()">
+                    <i class="fas fa-sync-alt" id="refresh-icon"></i> 重新整理
+                </button>
+            </div>
+
+            <div id="orderList">
+                <!-- 訂單內容會動態生成於此 -->
+            </div>
+
+            <div id="emptyState" style="text-align: center; padding: 40px; display: none;">
+                <i class="fas fa-box-open"
+                    style="font-size: 3rem; color: var(--glass-border); margin-bottom: 15px; display: block;"></i>
+                <p style="color: var(--text-muted);">目前尚無訂單資料</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知元件 -->
+    <div id="notification">
+        <i class="fas fa-check-circle" id="notificationIcon" style="color: var(--success);"></i>
+        <span id="notificationMessage">操作成功</span>
+    </div>
+
+    <script>
+        const API_URL = '/api/orders';
+
+        function showNotification(message, type = 'success') {
+            const toast = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const msgSpan = document.getElementById('notificationMessage');
+
+            msgSpan.innerText = message;
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            icon.style.color = type === 'success' ? 'var(--success)' : '#ef4444';
+
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function createOrder() {
+            const customerName = document.getElementById('newCustomerName').value;
+            const productName = document.getElementById('productName').value;
+            const price = parseFloat(document.getElementById('price').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            if (!customerName || !productName) {
+                alert('請填寫完整資訊');
+                return;
+            }
+
+            const requestBody = {
+                customerName: customerName,
+                productName: productName,
+                price: price,
+                quantity: quantity
+            };
+
+            const btn = document.querySelector('.btn-primary');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 處理中...';
+            btn.disabled = true;
+
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    showNotification('訂單 #' + data.id + ' 建立成功！');
+                    fetchAllOrders();
+                })
+                .catch(error => {
+                    console.error(error);
+                    showNotification('建立失敗', 'error');
+                })
+                .finally(() => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                });
+        }
+
+        function updateOrderStatus(id, newStatus) {
+            const requestBody = { status: newStatus };
+
+            fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        showNotification(`訂單 #${id} 已更新為 ${newStatus}`);
+                        fetchAllOrders();
+                    } else {
+                        throw new Error('更新失敗');
+                    }
+                })
+                .catch(error => showNotification(error.message, 'error'));
+        }
+
+        function deleteOrder(id, element) {
+            if (!confirm(`確定要刪除訂單 #${id} 嗎？`)) return;
+
+            fetch(`${API_URL}/${id}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        element.classList.add('deleting');
+                        showNotification(`訂單 #${id} 已刪除`);
+                        setTimeout(() => fetchAllOrders(), 300);
+                    } else {
+                        throw new Error('刪除失敗');
+                    }
+                })
+                .catch(error => showNotification(error.message, 'error'));
+        }
+
+        function fetchAllOrders() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('fa-spin');
+
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(orders => {
+                    const listDiv = document.getElementById('orderList');
+                    const emptyState = document.getElementById('emptyState');
+                    listDiv.innerHTML = '';
+
+                    if (orders.length === 0) {
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+
+                    emptyState.style.display = 'none';
+                    orders.forEach((order, index) => {
+                        const statusClass = 'status-' + order.status.toLowerCase();
+                        const itemsHtml = order.items.map(item => `
+                        <div class="item-row">
+                            <span>${item.productName} × ${item.quantity}</span>
+                            <span>$${item.subtotal}</span>
+                        </div>
+                    `).join('');
+
+                        const orderDiv = document.createElement('div');
+                        orderDiv.className = 'order-card animate-fade';
+                        orderDiv.style.animationDelay = (index * 0.05) + 's';
+
+                        // 動態按鈕切換
+                        let statusButtons = '';
+                        if (order.status === 'PENDING') {
+                            statusButtons = `
+                            <button class="btn btn-sm btn-success-soft" onclick="updateOrderStatus(${order.id}, 'COMPLETED')">
+                                <i class="fas fa-check"></i> 完成
+                            </button>
+                        `;
+                        }
+
+                        orderDiv.innerHTML = `
+                        <div class="order-header">
+                            <div class="order-id-group">
+                                <span class="order-id">#${order.id}</span>
+                                <span class="order-status ${statusClass}">${order.status}</span>
+                            </div>
+                            <button class="btn btn-sm btn-danger" onclick="deleteOrder(${order.id}, this.closest('.order-card'))">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">
+                            <i class="far fa-user"></i> ${order.customerName}
+                        </div>
+                        <div class="order-items">
+                            ${itemsHtml}
+                        </div>
+                        <div class="order-footer">
+                            <div class="action-group">
+                                ${statusButtons}
+                            </div>
+                            <div class="total-price">
+                                <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">總額</span> 
+                                $${order.totalAmount}
+                            </div>
+                        </div>
+                    `;
+                        listDiv.appendChild(orderDiv);
+                    });
+                })
+                .finally(() => {
+                    setTimeout(() => icon.classList.remove('fa-spin'), 500);
+                });
+        }
+
+        // 初始讀取
+        document.addEventListener('DOMContentLoaded', fetchAllOrders);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot 技術百科：究極全書 (The Master Encyclopedia)</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --sidebar-width: 320px;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            scroll-behavior: smooth;
+        }
+
+        /* 側選單 - 究極導覽結構 */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary-color);
+            color: #f1f5f9;
+            height: 100vh;
+            position: fixed;
+            padding: 30px 20px;
+            overflow-y: auto;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .sidebar h2 {
+            font-size: 1.6em;
+            color: #fff;
+            border-bottom: 4px solid var(--accent-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .sidebar-nav h3 {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-top: 35px;
+            letter-spacing: 2.5px;
+            font-weight: 800;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin: 8px 0;
+        }
+
+        .sidebar-nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: block;
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+
+        .sidebar-nav a:hover {
+            color: #fff;
+            padding-left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 主內容區 */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 60px;
+            flex-grow: 1;
+            max-width: 1500px;
+            box-sizing: border-box;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            padding: 60px;
+            border-radius: 24px;
+            margin-bottom: 70px;
+            box-shadow: 0 10px 45px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        h1 {
+            font-size: 3.8em;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 80px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            border-left: 15px solid var(--accent-color);
+            padding-left: 25px;
+            margin-bottom: 40px;
+            background: #f8fafc;
+            padding: 20px 30px;
+            border-radius: 0 15px 15px 0;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: var(--accent-color);
+            margin-top: 60px;
+            border-bottom: 3px solid #f1f5f9;
+            padding-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .mermaid {
+            background: #fff;
+            padding: 45px;
+            border: 2px solid #f1f5f9;
+            border-radius: 20px;
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.01);
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .tag {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95em;
+            font-weight: 600;
+            border: 2px solid #bfdbfe;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .badge-lib {
+            background: #3b82f6;
+        }
+
+        .badge-adv {
+            background: #ef4444;
+        }
+
+        .badge-env {
+            background: #64748b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 40px 0;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 22px;
+            border-bottom: 1px solid #e2e8f0;
+            color: var(--text-main);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .highlight-box {
+            background: #f0f9ff;
+            border-left: 10px solid var(--accent-color);
+            padding: 40px;
+            margin: 40px 0;
+            border-radius: 0 20px 20px 0;
+            color: #1e40af;
+        }
+
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 35px;
+            border-radius: 20px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1em;
+            line-height: 1.8;
+            border: 1px solid #334155;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 120px;
+            color: #94a3b8;
+            padding-bottom: 80px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 60px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .tech-item {
+            border: 1px solid #e2e8f0;
+            padding: 40px;
+            border-radius: 24px;
+            background: #fff;
+            border-top: 10px solid var(--accent-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tech-item:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-inline {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <h2>極致技術百科</h2>
+        <div class="sidebar-nav">
+            <h3>I. 專案根基與環境</h3>
+            <ul>
+                <li><a href="#intro">系統總覽 (Overview)</a></li>
+                <li><a href="#full-stack">技術棧全清單 (Tech Stack)</a></li>
+                <li><a href="#env-ops">環境部署全攻略 (Ops)</a></li>
+            </ul>
+
+            <h3>II. 系統拓樸與介面</h3>
+            <ul>
+                <li><a href="#global-topo">全域系統拓樸圖 (Global)</a></li>
+                <li><a href="#config-anatomy">配置參數深度剖析 (Config)</a></li>
+                <li><a href="#api-specs">gRPC/API 介面規約 (Specs)</a></li>
+            </ul>
+
+            <h3>III. 核心 Library (只增不減極致擴充)</h3>
+            <ul>
+                <li><a href="#lib-case-model">使用案例全貌 (Case Model)</a></li>
+                <li><a href="#lib-layers">六角分層設計 (Hexagonal)</a></li>
+                <li><a href="#lib-obj-dep">物件相依性圖 (Dependency)</a></li>
+                <li><a href="#lib-db-erd">極致 ER 資料模型圖 (ERD)</a></li>
+                <li><a href="#lib-flow">借閱業務精細序列流 (Sequence)</a></li>
+            </ul>
+
+            <h3>IV. 進階 Advanced 技術組件</h3>
+            <ul>
+                <li><a href="#adv-comm-mx">微服務通訊解決方案矩陣</a></li>
+                <li><a href="#adv-kafka-life">Kafka 非同步訊息生命週期</a></li>
+                <li><a href="#adv-seata-tcc">Seata 分散式事務詳解</a></li>
+                <li><a href="#adv-ws-push">WebSocket 即時通訊架構</a></li>
+            </ul>
+
+            <h3>V. 養成與維運</h3>
+            <ul>
+                <li><a href="#learn-roadmap">開發者四階段成長路徑</a></li>
+                <li><a href="#test-catalog">自動化測試案例全攻略</a></li>
+                <li><a href="#troubleshooting">究極疑難排查手冊 (Troubleshoot)</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 id="intro">Spring Boot 高階技術百科：究極全紀錄</h1>
+
+        <!-- 1. 專案根基 -->
+        <section class="section-card">
+            <h2>1. 專案根基與極致技術選型</h2>
+            <div class="badge badge-env">FOUNDATION</div>
+            <p>本專案嚴格遵循「內容只增不減」的擴充原則。本章節彙整了從基礎單機核心到微服務體系的所有技術細節。</p>
+
+            <h3 id="full-stack">全方位技術棧清單</h3>
+            <div class="tech-tags">
+                <span class="tag">Java 21 (LTS)</span>
+                <span class="tag">Spring Boot 3.2.2</span>
+                <span class="tag">Spring Cloud Gateway MVC</span>
+                <span class="tag">JPA / Hibernate 6</span>
+                <span class="tag">QueryDSL / MapStruct</span>
+                <span class="tag">gRPC / Protobuf 3</span>
+                <span class="tag">Apache Kafka 3.x</span>
+                <span class="tag">Seata 2.0 (TCC)</span>
+                <span class="tag">WebSocket (STOMP)</span>
+                <span class="tag">Redis Cache</span>
+                <span class="tag">H2 / MySQL / PostgreSQL</span>
+            </div>
+
+            <table class="table-styled">
+                <thead>
+                    <tr>
+                        <th>技術維度</th>
+                        <th>選型版本</th>
+                        <th>技術目的與價值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>核心引擎</strong></td>
+                        <td>Spring Boot 3.2.2</td>
+                        <td>支撐 Java 21 虛擬緒，實現高性能併發。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>存取層</strong></td>
+                        <td>JPA / Hibernate</td>
+                        <td>標準化 ORM 映射，保證數據處理的一致性。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>消息隊列</strong></td>
+                        <td>Apache Kafka</td>
+                        <td>實現系統間完全解耦，支持高吞吐訊息流。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>分散式事務</strong></td>
+                        <td>Seata TCC</td>
+                        <td>解決跨微服務操作的原子性問題。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>通訊協定</strong></td>
+                        <td>gRPC / HTTP 2.0</td>
+                        <td>利用二進制序列化極大化內部 call 效率。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="env-ops">環境部署檢核清單</h3>
+            <div class="highlight-box">
+                <strong>💡 啟動前環境 Ready Check：</strong>
+                <ol>
+                    <li><strong>JDK 21</strong>: 確認 <span class="code-inline">java -version</span> 為 21+。</li>
+                    <li><strong>Infrastructure</strong>: 啟動 Docker 並執行 Kafka (<span class="code-inline">29092</span>) 與
+                        Redis (<span class="code-inline">6379</span>)。</li>
+                    <li><strong>Persistence</strong>: 預設 H2 Console 位址於 <span class="code-inline">/h2-console</span>。
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- 2. 全域拓樸 -->
+        <section id="global-topo" class="section-card">
+            <h2>2. 系統全域拓樸圖 (Global Framework)</h2>
+            <p>展示外部請求從網關穿透到後端各模組的完整拓樸路徑。</p>
+            <div class="mermaid">
+                graph TD
+                User((使用者/前端)) -->|REST/WS| GW[API Gateway MVC]
+                GW -->|路由 1| Lib[圖書館核心模組]
+                GW -->|路由 2| KP[Kafka 訊息傳送]
+                GW -->|路由 3| TCC[Seata 事務協調]
+                GW -->|路由 4| gRPC[gRPC 高效通訊]
+
+                Lib <--> Redis[(Redis Cache)]
+                    Lib --> DB[(H2/MySQL DB)]
+
+                    KP --> Topic{Kafka Topic}
+                    Topic --> KC[Kafka Consumer]
+                    KC --> WS[WS Broker]
+                    WS -->|實時推播| User
+
+                    style GW fill:#2563eb,color:#fff
+                    style Lib fill:#1e293b,color:#fff
+                    style KP fill:#ea580c,color:#fff
+                    style TCC fill:#dc2626,color:#fff
+                    style gRPC fill:#16a34a,color:#fff
+                    style WS fill:#9333ea,color:#fff
+            </div>
+
+            <h3 id="config-anatomy">核心配置參數深度剖析 (Properties)</h3>
+            <pre><code># Kafka 性能調優
+spring.kafka.producer.batch-size=16384     # 每批次最大 Bytes
+spring.kafka.producer.properties.linger.ms=5 # 減少發送次數，提高吞吐
+spring.kafka.producer.compression-type=snappy # 高效壓縮
+
+# Seata & 微服務
+seata.tx-service-group=default_group
+spring.cloud.discovery.enabled=false # 本地開發模式</code></pre>
+
+            <h3 id="api-specs">gRPC 介面定義 (Proto Specs)</h3>
+            <p>利用 Protobuf 明確定義服務契約，避免因 JSON 欄位變更導致的不可預期錯誤。</p>
+            <pre><code>service BookService {
+    // 高效能二進制 RPC 呼叫
+    rpc GetBook(BookRequest) returns (BookResponse);
+}
+message BookRequest { int32 id = 1; }
+message BookResponse { 
+    int32 id = 1; string title = 2; string author = 3; 
+}</code></pre>
+        </section>
+
+        <!-- 3. 核心 Library 實作 (極致詳解區) -->
+        <section id="lib-case-model" class="section-card">
+            <h2>3. 核心 Library 實作：深度架構與物件關係 (Expand)</h2>
+            <div class="badge badge-lib">LIBRARY CORE DETAIL</div>
+
+            <h3 id="use-case">A. 使用案例全貌圖 (Case Model)</h3>
+            <p>定義讀者與管理員在圖書館生態系統中的所有交互邊界。</p>
+            <div class="mermaid">
+                graph LR
+                subgraph "圖書館核心功能"
+                UC1((查詢書籍清單))
+                UC2((查看詳細資訊))
+                UC3((線上借閱圖書))
+                UC4((辦理圖書歸還))
+                UC5((圖書資料維護))
+                end
+                User((圖書館讀者)) --> UC1
+                User --> UC2
+                User --> UC3
+                User --> UC4
+                Admin((系統管理員)) --> UC5
+                Admin --> UC1
+            </div>
+
+            <h3 id="lib-layers">B. 六角分層設計圖 (Hexagonal Architecture)</h3>
+            <p>展示領域邏輯如何與外觀入口 (Controller) 以及外部驅動 (DB, Cache) 徹底解耦。</p>
+            <div class="mermaid">
+                graph TB
+                subgraph "入口適配器 (Incoming Adapters)"
+                Web[RestController]
+                WS_CTRL[STOMP Controller]
+                gRPC_END[gRPC Endpoint]
+                end
+
+                subgraph "領域核心 (Domain Logic)"
+                Svc_I[BookService Interface]
+                Svc_Impl[BookServiceImpl]
+                Validator[Business Rules Validator]
+                Svc_I --- Svc_Impl
+                Svc_Impl --- Validator
+                end
+
+                subgraph "出口適配器 (Outgoing Adapters)"
+                JPA[JpaRepository]
+                REDIS[Redis Manager]
+                LOGGER[Audit Aspect]
+                end
+
+                Web --> Svc_I
+                WS_CTRL --> Svc_I
+                gRPC_END --> Svc_I
+                Svc_Impl --> JPA
+                Svc_Impl --> REDIS
+                Svc_Impl --> LOGGER
+            </div>
+
+            <h3 id="lib-obj-dep">C. 物件相依性與生命週期圖 (Dependency Map)</h3>
+            <p>標記從外部進入到資料持久化的物件依賴鏈及其資料傳輸承載。 (DTO vs Entity)</p>
+            <div class="mermaid">
+                graph LR
+                UI[Frontend/Client] --> Ctrl[BookController]
+                Ctrl -- "Inject" --> Svc[BookService]
+                Svc -- "Depends" --> Repo[BookRepository]
+                Svc -- "Convert" --> Mapper[MapStruct/Custom Mapper]
+                Repo -- "Persist" --> Entity[Book Entity]
+                Svc -- "Present" --> DTO[BookDto]
+
+                style Entity fill:#f87171,color:#fff
+                style DTO fill:#4ade80,color:#fff
+                style Svc fill:#60a5fa,color:#fff
+            </div>
+
+            <h3 id="lib-db-erd">D. 極致 ER 資料模型圖 (ERD Pro)</h3>
+            <p>詳列每個表格的欄位限制、資料型別與關聯約束關係。</p>
+            <div class="mermaid">
+                erDiagram
+                BOOK ||--o| ORDER : "關聯訂單"
+                ORDER ||--|{ ORDER_ITEM : "含項目明細"
+                ORDER {
+                long id PK "Auto-Inc"
+                string customerName "Not Null"
+                string product_name "Not Null"
+                decimal total_amount "Precision 10,2"
+                string status "Enum: PENDING, PAID, CANCEL"
+                }
+                BOOK {
+                int id PK "Identifier"
+                string title "Not Null, Index"
+                string author "Not Null"
+                string category "Description"
+                boolean is_borrowed "Default: 0"
+                }
+                ORDER_ITEM {
+                long id PK
+                long order_id FK "Ref: orders.id"
+                string item_name "Product Name"
+                decimal item_price "Price"
+                }
+            </div>
+
+            <h3 id="lib-flow">E. 借閱業務精細序列流 (Sequence Deep Dive)</h3>
+            <p>拆解每一個請求背後的事務邊界與狀態驗證節點。</p>
+            <div class="mermaid">
+                sequenceDiagram
+                autonumber
+                participant U as User Client
+                participant C as BookController
+                participant S as BookServiceImpl
+                participant R as BookRepository
+                participant DB as SQL DB
+
+                U->>C: POST /api/books/{id}/borrow?user=John
+                C->>S: borrowBook(id, "John")
+                activate S
+                S->>R: findById(id)
+                R->>DB: SELECT * FROM books WHERE id=...
+                DB-->>R: Row Data
+                R-->>S: Book Entity Object
+
+                Note over S: 業務核心：檢查 isBorrowed() 是否為 false
+
+                alt 驗證通過
+                S->>S: 修改狀態: isBorrowed=true, borrower=John
+                S->>R: save(updatedBook)
+                R->>DB: UPDATE books SET ...
+                DB-->>R: Ack
+                S->>S: Entity To DTO (Object Mapping)
+                S-->>C: DTO Response
+                deactivate S
+                C-->>U: 200 OK (Success Result)
+                else 已借出
+                S-->>C: Throw BookNotAvailableException
+                C-->>U: 400 Bad Request (Error Info)
+                end
+            </div>
+        </section>
+
+        <!-- 4. 進階 Advanced 技術 -->
+        <section id="adv-comm-mx" class="section-card">
+            <h2>4. 進階 Advanced 技術與微服務治理</h2>
+            <div class="badge badge-adv">ADVANCED</div>
+
+            <h3 id="adv-matrix">微服務通訊解決方案全矩陣</h3>
+            <table class="table-styled">
+                <thead>
+                    <tr>
+                        <th>通訊手段</th>
+                        <th>底層協定</th>
+                        <th>序列化方式</th>
+                        <th>核心優點</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>REST API</strong></td>
+                        <td>HTTP/1.1</td>
+                        <td>JSON (字串)</td>
+                        <td>標準化、易於前端調試。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>gRPC</strong></td>
+                        <td>HTTP/2.0</td>
+                        <td>Protobuf (二進制)</td>
+                        <td>極速、二進制壓縮、強型別介面。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kafka</strong></td>
+                        <td>TCP Custom</td>
+                        <td>Serialization</td>
+                        <td>異步解耦、高可用、重放能力。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="adv-kafka-life">Kafka 非同步發送生命週期圖</h3>
+            <div class="mermaid">
+                stateDiagram-v2
+                [*] --> App: 產生事件 (如訂單建立)
+                App --> KafkaProducer: CompletableFuture.send()
+                KafkaProducer --> Buffer: 內存緩存 (Linger 5ms)
+                Buffer --> Network: Snappy 壓縮發送
+                Network --> Broker: 寫入 Topic (Partition)
+                Broker --> Consumer: 訂閱者監聽觸發 (Listener)
+                Consumer --> WebSocket: 即時更新前端看板
+                WebSocket --> [*]
+            </div>
+
+            <h3 id="adv-seata-tcc">Seata TCC 分散式事務全生命週期</h3>
+            <div class="mermaid">
+                sequenceDiagram
+                participant TC as 事務協調器
+                participant T as Try (準備)
+                participant C as Confirm (確定)
+                participant R as Cancel (回滾)
+
+                TC->>T: 1. 執行 prepare() (凍結餘額/預留庫存)
+                alt 所有 Try 成功
+                TC->>C: 2. 執行 commit() (真正扣除資源)
+                else 任何一個失敗
+                TC->>R: 2. 執行 rollback() (釋放預留資源)
+                end
+            </div>
+        </section>
+
+        <!-- 5. 養成與維運 -->
+        <section id="learn-roadmap" class="section-card">
+            <h2>5. 養成學習路徑與維運指南</h2>
+
+            <h3 id="roadmap">高階開發者成長四階段</h3>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>Step 1: 核心內功</h4>
+                    <p>精通 JPA 事務邊界。關鍵：<code>BookServiceImpl</code>。</p>
+                </div>
+                <div class="tech-item" style="border-top-color: var(--success-color)">
+                    <h4>Step 2: 高校通訊</h4>
+                    <p>掌握 gRPC 與 Protobuf 選型理由。</p>
+                </div>
+                <div class="tech-item" style="border-top-color: var(--warning-color)">
+                    <h4>Step 3: 非同步大師</h4>
+                    <p>深度應用 Kafka 非同步解耦。標的：<code>KafkaProducerService</code>。</p>
+                </div>
+                <div class="tech-item" style="border-top-color: var(--danger-color)">
+                    <h4>Step 4: 分散式架構</h4>
+                    <p>設計 Seata TCC 一致性方案。目標：<code>TccAction</code>。</p>
+                </div>
+            </div>
+
+            <h3 id="troubleshooting">究極疑難排查清單</h3>
+            <div class="highlight-box"
+                style="border-color: var(--danger-color); color: var(--danger-color); background: #fef2f2;">
+                <strong>🚨 專業排查紅區：</strong>
+                <ul>
+                    <li><strong>測試 Bean 注入衝突?</strong> 請在測試類標註 <code>properties = "seata.enabled=false"</code>。</li>
+                    <li><strong>Kafka 無法消費?</strong> 確認 <code>group-id</code> 有效且 Topic 已經啟動。</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="footer">
+            <p>Spring Boot 極致百科全書 | 2026 年度編修 | Antigravity AI Powered</p>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+</body>
+
+</html>

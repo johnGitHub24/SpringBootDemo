@@ -1,0 +1,27 @@
+﻿syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.demo.springbootdemo.grpc";
+option java_outer_classname = "BookProto";
+
+package book;
+
+// 圖書服務定義
+service BookService {
+    // 獲取圖書詳情
+    rpc GetBook(BookRequest) returns (BookResponse);
+}
+
+// 請求訊息
+message BookRequest {
+    int32 id = 1;
+}
+
+// 響應訊息
+message BookResponse {
+    int32 id = 1;
+    string title = 2;
+    string author = 3;
+    string category = 4;
+    bool is_borrowed = 5;
+}
