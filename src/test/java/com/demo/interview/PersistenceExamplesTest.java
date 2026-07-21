@@ -6,13 +6,14 @@ import java.util.concurrent.locks.ReentrantLock;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 事務管理與持久化範例的單元測試
+ * 覆蓋 {@link PersistenceExamples}（面試示範：事務／分散式鎖）。
+ * 驗證 Redis 鎖模擬流程與 TransactionService 類別定義存在。
  */
 public class PersistenceExamplesTest {
 
     /**
-     * 測試 Redis 分散式鎖的模擬執行流程。
-     * 驗證在「成功獲取鎖」的情況下，業務邏輯能被執行，且最後「務必解鎖」。
+     * CASE-IV-PERS-001：Redis 鎖模擬執行後必解鎖。
+     * Given: ReentrantLock 模擬；When: doWithLock；Then: 不拋例外且 isLocked=false。
      */
     @Test
     public void testRedisLockLogic() {
@@ -31,7 +32,8 @@ public class PersistenceExamplesTest {
     }
 
     /**
-     * 測試 Transaction Service 是否有正確定義。
+     * CASE-IV-PERS-002：TransactionService 類別已定義。
+     * Given: PersistenceExamples 內嵌類；When: 讀取 class；Then: 非 null。
      */
     @Test
     public void testTransactionServiceDefinition() {

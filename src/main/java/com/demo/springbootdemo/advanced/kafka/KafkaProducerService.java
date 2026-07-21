@@ -1,4 +1,4 @@
-﻿package com.demo.springbootdemo.advanced.kafka;
+package com.demo.springbootdemo.advanced.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -8,17 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Kafka 訊息發送者服務 (High-Concurrency Producer)
- * 
- * 適用場景：
- * Kafka 訊息發送者服務
- * 
- * 【高併發場景應用】：
- * 1. 日誌非同步蒐集：避免日誌寫入阻塞業務流程。
- * 2. 支付結果回調：多個支付通道併發回傳結果時，透過 Topic 進行削峰填谷。
- * 3. 系統解耦：將即時性要求不高的後續處理（如發送發票、增加點數）丟入 Kafka。
- * 
- * 本服務使用 KafkaTemplate，其底層已實現連線池與非同步發送，支撐高吞吐量。
+ * 【職責】以 {@link KafkaTemplate} 非同步發送業務事件至指定 Topic。
+ * 【技巧】以 key 決定分區以利同 key 保序，並以 {@link CompletableFuture} 回調記錄成功／失敗。
+ * 【概念】Producer 與主流程解耦可削峰；正式環境需補重試、事務訊息或死信策略。
+ * 【邊界】不負責消費者處理。
  */
 @Slf4j
 @Service
@@ -27,19 +20,18 @@ public class KafkaProducerService {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     /**
-     * 建構子注入 KafkaTemplate
-     * @param kafkaTemplate Spring 提供的 Kafka 操作模板
+     * @param kafkaTemplate Spring 提供的 Kafka 操作範本（底層含連線池與非同步發送）
      */
     public KafkaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     /**
-     * 發送簡單字串訊息
-     * 
-     * @param topic 目標 Topic
-     * @param key   訊息 Key (用於分區保序)
-     * @param message 訊息內容 (Payload)
+     * 非阻塞發送字串訊息；以 key 決定分區以利同 key 保序，結果於回調中記錄。
+     *
+     * @param topic   目標 Topic
+     * @param key     訊息 Key（影響分區與同 key 順序）
+     * @param message 訊息內容（Payload）
      */
     public void sendMessage(String topic, String key, String message) {
         log.info("發送訊息至 Kafka - Topic: {}, Key: {}, Payload: {}", topic, key, message);
@@ -63,7 +55,12 @@ public class KafkaProducerService {
     }
 
     /**
-     * 發送帶有特定分區邏輯的訊息 (展示高併發下的分派)
+     * 將訊息送至指定分區，用於示範高併發下需固定分區或手動負載分配的場景。
+     *
+     * @param topic     目標 Topic
+     * @param partition 目標分區編號
+     * @param key       訊息 Key
+     * @param message   訊息內容
      */
     public void sendToPartition(String topic, Integer partition, String key, String message) {
         log.info("發送訊息至特定分區 - Topic: {}, Partition: {}, Message: {}", topic, partition, message);

@@ -1,12 +1,14 @@
-﻿package com.demo.springbootdemo.library.model;
+package com.demo.springbootdemo.library.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * 圖書實體類別 (Book Entity)
- * 升級內容：使用 JPA 註解與 Bean Validation
+ * 【職責】映射圖書資料表 {@code book}，承載書名、作者、分類與借閱狀態。
+ * 【技巧】以 JPA 註解定義主鍵與欄位，並以 Bean Validation 表達非空／長度約束。
+ * 【概念】實體描述持久化結構；對外 API 形狀用 DTO，借還流程由 Service 控制。
+ * 【邊界】不含對外 API 形狀或借還商業流程。
  */
 @Entity // 宣告這是一個資料庫實體
 @Table(name = "book") // 對映到資料表 "book"

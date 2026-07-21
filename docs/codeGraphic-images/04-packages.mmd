@@ -1,0 +1,13 @@
+flowchart TB
+  subgraph core [com.demo]
+    C[controller]
+    S[service]
+    R[repository]
+    M[model/dto]
+  end
+  subgraph ext [optional]
+    ADV[advanced]
+    FE[frontend]
+  end
+  C --> S --> R
+  FE --> C

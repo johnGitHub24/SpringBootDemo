@@ -1,24 +1,23 @@
-﻿package com.demo.springbootdemo.advanced.kafka;
+package com.demo.springbootdemo.advanced.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 /**
- * Kafka 訊息消費者服務
- * 
- * 功能：
- * 1. 監聽特定 Topic 的訊息。
- * 2. 實作流式處理 (Streaming Process) 邏輯。
- * 3. 執行數據清洗與初步持久化準備。
+ * 【職責】訂閱 {@code payment-topic}，將收到的訊息交給內部流式處理流程。
+ * 【技巧】以 {@code @KafkaListener} 綁定 topic 與 consumer group 作為回呼入口。
+ * 【概念】Consumer 是訊息邊界；後續轉換／過濾／持久化應下沉，避免 listener 膨脹。
+ * 【邊界】不負責訊息發送、offset 重放或跨 Topic 路由。
  */
 @Slf4j
 @Service
 public class KafkaConsumerService {
 
     /**
-     * 監聽支付主題 (payment-topic)
-     * @param message 接收到的原始訊息字串
+     * 監聽支付主題並觸發後續流式處理；此方法為 Spring Kafka 回呼入口。
+     *
+     * @param message 自 Kafka 收到的原始字串 Payload
      */
     @KafkaListener(topics = "payment-topic", groupId = "payment-group")
     public void listenPayment(String message) {

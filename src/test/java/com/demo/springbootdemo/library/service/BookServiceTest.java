@@ -1,4 +1,4 @@
-﻿package com.demo.springbootdemo.library.service;
+package com.demo.springbootdemo.library.service;
 
 import com.demo.springbootdemo.library.dao.BookRepository;
 import com.demo.springbootdemo.library.dto.BookDto;
@@ -17,8 +17,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * BookService 單元測試
- * 示範 JUnit 5 + Mockito: 在不依賴真實資料庫的情況下測試商業邏輯
+ * 覆蓋 {@link BookServiceImpl}（Service 層）的單元測試。
+ * 以 Mockito 隔離 {@link BookRepository}，驗證借書商業邏輯，不依賴真實資料庫。
  */
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -29,6 +29,10 @@ public class BookServiceTest {
     @InjectMocks
     private BookServiceImpl bookService;
 
+    /**
+     * CASE-BOOK-SVC-001：借書成功。
+     * Given: 未借出書籍；When: borrowBook；Then: isBorrowed=true、borrowerName 正確，且 save 被呼叫一次。
+     */
     @Test
     @DisplayName("測試借書功能：成功路徑")
     public void testBorrowBook_Success() {
@@ -55,6 +59,10 @@ public class BookServiceTest {
         Mockito.verify(bookRepository, Mockito.times(1)).save(Mockito.any(Book.class));
     }
 
+    /**
+     * CASE-BOOK-SVC-002：借書失敗（已借出）。
+     * Given: 書籍已借出；When: borrowBook；Then: 拋出 BookNotFoundException。
+     */
     @Test
     @DisplayName("測試借書功能：失敗路徑 (已被借出)")
     public void testBorrowBook_Fail_AlreadyBorrowed() {

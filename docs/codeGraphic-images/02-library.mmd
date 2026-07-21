@@ -1,0 +1,11 @@
+flowchart TB
+  subgraph orders ["/api/orders"]
+    OC[OrderController]
+  end
+  subgraph library ["/library"]
+    BC[BookController]
+  end
+  OC --> OS[OrderService]
+  BC --> BS[BookService]
+  OS --> DB[(H2)]
+  BS --> DB

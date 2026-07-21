@@ -1,4 +1,4 @@
-﻿package com.demo.springbootdemo.advanced.kafka;
+package com.demo.springbootdemo.advanced.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
@@ -6,11 +6,10 @@ import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Service;
 
 /**
- * Kafka 訊息重放服務 (Message Replay Service)
- * 
- * 功能描述：
- * 展示如何透過手動控制 Kafka Listener 容器，實現訊息重放的設計思路。
- * 這在區塊鏈交易校對或系統錯誤恢復時非常有用。
+ * 【職責】依 listenerId 停止／重啟 Kafka Listener 容器，示範訊息重放（Replay）思路。
+ * 【技巧】透過 {@link KafkaListenerEndpointRegistry} 查找並控制動態 Listener 容器。
+ * 【概念】重放常用於錯誤恢復或對帳；正式環境需真實 seek／冪等，否則會重複副作用。
+ * 【邊界】不實作實際 {@code seek}，也不負責跨叢集運維。
  */
 @Slf4j
 @Service
@@ -19,21 +18,17 @@ public class ReplayService {
     private final KafkaListenerEndpointRegistry registry;
 
     /**
-     * @param registry Kafka 監聽器註冊表，用於管理所有動態監聽容器
+     * @param registry Kafka 監聽器端點登錄表，用來查找並控制動態 Listener 容器
      */
     public ReplayService(KafkaListenerEndpointRegistry registry) {
         this.registry = registry;
     }
 
     /**
-     * 重放特定監聽器的訊息
-     * 
-     * 實務邏輯：
-     * 1. 停止 Consumer (container.stop())
-     * 2. 重置 Offset (通常透過 KafkaConsumer.seek() 實現)
-     * 3. 重啟 Consumer (container.start())
-     * 
-     * @param listenerId 監聽器的唯一代號 (即 @KafkaListener 的 id 屬性)
+     * 對指定 Listener 執行「停容器 →（模擬）重置 offset → 重啟」的重放流程。
+     * 找不到對應容器時僅記錄警告並結束，不拋出例外。
+     *
+     * @param listenerId 對應 {@code @KafkaListener} 的 {@code id} 屬性
      */
     public void replayMessages(String listenerId) {
         log.info("觸發訊息重放流程 - 準備重新讀取歷史數據, ListenerID: {}", listenerId);

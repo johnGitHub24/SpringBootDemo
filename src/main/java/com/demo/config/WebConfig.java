@@ -5,19 +5,19 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 這是 Web 相關的設定類別
- * 初學者筆記：@Configuration 告訴 Spring 這個類別是用來做系統設定的。
+ * 【職責】設定 Web MVC 的跨來源（CORS）規則，讓前端開發時可呼叫本機 API。
+ * 【技巧】實作 {@link WebMvcConfigurer#addCorsMappings}，對 {@code /api/**} 宣告允許的來源、方法與 Header。
+ * 【概念】瀏覽器同源政策會阻擋不同埠的前端呼叫；開發期可用寬鬆 CORS，正式環境應改為明確白名單來源。
+ * 【邊界】不處理認證授權，也不決定業務 API 契約。
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     /**
-     * 設定 CORS (跨來源資源共用)
-     * 
-     * 為什麼需要這個？
-     * 當你的前端頁面（例如在瀏覽器直接打開 HTML 檔案）嘗試呼叫不同來源（連接埠不同，如 8080）的 API 時，
-     * 瀏覽器基於安全性會阻擋這個行為。這就是所謂的 CORS 政策。
-     * 我們在這裡設定允許前端的請求通過。
+     * 【職責】註冊開發用 CORS 對應，放行 API 路徑的跨來源請求。
+     * 【技巧】透過 {@link CorsRegistry} 鏈式設定 origins／methods／headers。
+     * 【概念】CORS 是瀏覽器安全機制，不是伺服器防火牆；後端仍需自行做認證與授權。
+     * @param registry Spring CORS 登錄表
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {

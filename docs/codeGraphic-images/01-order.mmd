@@ -1,0 +1,5 @@
+flowchart LR
+  V[Vue frontend] --> OC[OrderController]
+  OC --> OS[OrderService]
+  OS --> OR[OrderRepository]
+  OR --> H2[(H2 mem)]

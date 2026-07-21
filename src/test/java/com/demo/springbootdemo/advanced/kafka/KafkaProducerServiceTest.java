@@ -1,4 +1,4 @@
-﻿package com.demo.springbootdemo.advanced.kafka;
+package com.demo.springbootdemo.advanced.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
@@ -15,13 +15,8 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Kafka 生產者整合測試
- * 
- * 測試重點：
- * 1. 確保訊息能成功發送至 EmbeddedKafka。
- * 2. 驗證非同步 Callback 邏輯。
- * 
- * 註：使用 properties 排除 Seata 以免干擾測試環境
+ * 覆蓋 {@link KafkaProducerService}（Kafka 生產者／訊息層）的整合測試。
+ * 使用 EmbeddedKafka 驗證訊息可送達；內部 {@code @KafkaListener} 僅供測試收取。
  */
 @SpringBootTest(properties = {
     "seata.enabled=false"
@@ -37,9 +32,8 @@ public class KafkaProducerServiceTest {
     private static final BlockingQueue<String> records = new LinkedBlockingQueue<>();
 
     /**
-     * 測試 Kafka 訊息發送與接收
-     * 1. 使用 ProducerService 發送訊息
-     * 2. 利用測試內部的 @KafkaListener 監聽並驗證訊息內容
+     * CASE-KAFKA-PROD-001：發送後可被監聽器收到。
+     * Given: EmbeddedKafka topic=test-topic；When: sendMessage；Then: 10 秒內收到相同內容。
      */
     @Test
     public void testSendMessage() throws InterruptedException {
@@ -57,7 +51,7 @@ public class KafkaProducerServiceTest {
     }
 
     /**
-     * 內部監聽器：專門用於測試驗證
+     * 測試用內部監聽器：將收到的訊息放入佇列供斷言。
      */
     @KafkaListener(topics = "test-topic", groupId = "test-group")
     public void listen(ConsumerRecord<String, String> record) {

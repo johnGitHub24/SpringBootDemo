@@ -35,3 +35,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# eos-minimal onboard
+node_modules/
+*.log
+hs_err_pid*.log
+bash.exe.stackdump
+.env
+replay_pid*.log

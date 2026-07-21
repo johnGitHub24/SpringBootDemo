@@ -1,4 +1,4 @@
-﻿package com.demo.springbootdemo.library.controller;
+package com.demo.springbootdemo.library.controller;
 
 import com.demo.springbootdemo.library.dto.BookDto;
 import com.demo.springbootdemo.library.exception.BookNotFoundException;
@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * BookController 整合測試
- * 示範使用 MockMvc 模擬真實的 API 請求與 HTTP 狀態碼驗證
+ * 覆蓋 {@link BookController}（Controller 層）的 MockMvc 整合測試。
+ * Service 以 {@code @MockBean} 隔離，驗證 HTTP 狀態碼與 JSON 錯誤回應。
  */
 @SpringBootTest(properties = "seata.enabled=false")
 @AutoConfigureMockMvc // 自動配置 MockMvc
@@ -31,6 +31,10 @@ public class BookControllerTest {
     @MockBean
     private BookService bookService; // 模擬 Service 層
 
+    /**
+     * CASE-BOOK-CTL-001：取得書籍成功。
+     * Given: Service 回傳 BookDto；When: GET /library/books/1；Then: 200 + title/id 正確。
+     */
     @Test
     @DisplayName("測試獲取書籍 API：成功")
     public void testGetBook_Success() throws Exception {
@@ -50,6 +54,10 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * CASE-BOOK-CTL-002：書籍不存在回 404。
+     * Given: Service 拋出 BookNotFoundException；When: GET /library/books/999；Then: 404 + 錯誤訊息。
+     */
     @Test
     @DisplayName("測試獲取書籍 API：找不到書籍 (404)")
     public void testGetBook_NotFound() throws Exception {

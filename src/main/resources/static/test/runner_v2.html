@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpringBoot Demo | Integrity Master Pro v2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.06);
+            --primary: #38bdf8;
+            --accent: #818cf8;
+        }
+        body { 
+            background: var(--bg); 
+            color: #e2e8f0; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.08) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+        .glass { 
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+        }
+        .log-line { font-family: 'Fira Code', monospace; }
+        .test-card { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--border);
+        }
+        .test-card:hover { 
+            transform: translateY(-2px); 
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
+        }
+        .btn-active {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .animate-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        [v-cloak] { display: none; }
+        
+        .status-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <div id="test-app" class="max-w-6xl mx-auto" v-cloak>
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8">
+            <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                    <span class="px-2 py-0.5 bg-sky-500/10 text-sky-400 text-[10px] font-black tracking-[0.2em] uppercase rounded-full border border-sky-500/20">System Integrity</span>
+                    <span class="text-slate-500 text-[10px] log-line">Build v3.0.0-PRO-v2</span>
+                </div>
+                <h1 class="text-5xl font-extrabold tracking-tighter text-white">
+                    Integrity <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-400">Master</span>
+                </h1>
+                <p class="text-slate-400 font-medium">微服務架構、Java 21 特性及分散式事務之全鏈路自動化驗證</p>
+            </div>
+            
+            <div class="flex gap-4">
+                <div class="glass px-8 py-6 flex flex-col items-center justify-center min-w-[140px]">
+                    <div class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Pass Rate</div>
+                    <div class="text-4xl font-black text-sky-400 tabular-nums">{{ Math.round(percent) }}%</div>
+                </div>
+                <div class="glass px-8 py-6 flex flex-col items-center justify-center min-w-[140px]">
+                    <div class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Discovery</div>
+                    <div class="text-4xl font-black text-white tabular-nums">{{ allResults.length }}</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar Container -->
+        <div class="relative w-full h-1.5 bg-slate-800 rounded-full mb-16 overflow-hidden">
+            <div class="absolute inset-0 animate-shimmer"></div>
+            <div class="h-full bg-gradient-to-r from-sky-500 to-indigo-500 transition-all duration-1000 shadow-[0_0_20px_rgba(56,189,248,0.5)]" 
+                :style="{ width: percent + '%' }"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            <!-- Sidebar: Categories -->
+            <aside class="space-y-3">
+                <h3 class="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] mb-6 pl-2">驗證模組</h3>
+                <button v-for="mod in modules" :key="mod.id" 
+                    @click="activeModule = mod.id"
+                    class="w-full flex items-center justify-between p-4 rounded-2xl border border-transparent transition-all text-sm group"
+                    :class="activeModule === mod.id ? 'btn-active' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'">
+                    <span class="flex items-center gap-4">
+                        <span class="text-xl group-hover:scale-110 transition-transform">{{ mod.icon }}</span>
+                        <span class="font-bold">{{ mod.name }}</span>
+                    </span>
+                    <div v-if="mod.tests.value.length > 0" class="flex items-center">
+                        <span v-if="mod.status === 'pass'" class="text-emerald-500 text-xs">●</span>
+                        <span v-else-if="mod.status === 'fail'" class="text-rose-500 animate-pulse text-xs">▲</span>
+                    </div>
+                </button>
+
+                <div class="pt-8">
+                    <button @click="runTests" :disabled="running" 
+                        class="w-full py-5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-slate-900 font-black transition-all flex items-center justify-center gap-3 shadow-lg shadow-sky-500/20 disabled:opacity-50 disabled:cursor-not-allowed group">
+                        <span v-if="running" class="animate-spin text-lg">⚙️</span>
+                        <span v-else class="group-hover:rotate-180 transition-transform duration-500 text-lg">⚡</span>
+                        {{ running ? '驗證執行中' : '啟動全系統掃描' }}
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Results Feed -->
+            <main class="lg:col-span-3 space-y-6">
+                <div v-if="modules[activeModule].tests.value.length === 0" class="glass p-20 text-center text-slate-500 font-bold italic border-dashed border-2 border-slate-800">
+                    <div class="text-4xl mb-4 opacity-20">🔍</div>
+                    等待引擎廣播驗證結果...
+                </div>
+                
+                <transition-group name="list" tag="div" class="space-y-4">
+                    <div v-for="(res, idx) in modules[activeModule].tests.value" :key="res.name" 
+                        class="test-card p-8 rounded-3xl"
+                        :class="res.pass ? 'border-emerald-500/20' : 'border-rose-500/20'">
+                        
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-3">
+                                    <h4 class="text-xl font-bold text-white tracking-tight">
+                                        {{ res.name }}
+                                    </h4>
+                                    <span v-if="res.pass" class="status-badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Success</span>
+                                    <span v-else class="status-badge bg-rose-500/10 text-rose-400 border border-rose-500/20">Failure</span>
+                                </div>
+                                <p class="text-slate-400 text-sm font-medium">{{ res.desc }}</p>
+                            </div>
+                            <div class="text-[10px] log-line text-slate-500 font-bold bg-slate-800/50 px-3 py-1.5 rounded-full">
+                                {{ res.timestamp.toLocaleTimeString() }}
+                            </div>
+                        </div>
+
+                        <!-- Logs Section -->
+                        <div v-if="res.logs.length > 0" class="mt-6 p-5 bg-slate-900/50 rounded-2xl space-y-2 border border-slate-800/50">
+                            <div v-for="log in res.logs" class="text-[12px] log-line flex gap-4 text-slate-400 leading-relaxed items-start">
+                                <span class="text-sky-500 font-black mt-0.5">»</span>
+                                <span class="break-all">{{ log }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </transition-group>
+            </main>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "vue": "https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.esm-browser.js"
+        }
+    }
+    </script>
+    <script type="module" src="suite_v2.js"></script>
+</body>
+</html>

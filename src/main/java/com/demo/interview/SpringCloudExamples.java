@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * Group D: Spring Cloud 與 微服務技術範例
- * 涵蓋 Gateway 概念, OpenFeign 與 gRPC。
+ * 【職責】以註解與示意型別說明 Gateway／Feign／gRPC 等微服務通訊概念。
+ * 【技巧】用巢狀型別與 Mock 註解呈現路由、宣告式客戶端與服務端骨架。
+ * 【概念】微服務通訊有多種協定與閘道模式；先建立概念再接真實基礎設施，學習曲線較平緩。
+ * 【邊界】不負責真實服務發現、負載均衡、proto 產生或正式 Feign 依賴。
  */
 public class SpringCloudExamples {
 
@@ -25,21 +27,33 @@ public class SpringCloudExamples {
      */
 
     /**
-     * 由於專案未引入 spring-cloud-starter-openfeign，在此模擬註解定義。
+     * 教學用 Feign 客戶端註解替身；因專案未引入 openfeign starter，僅保留宣告式客戶端語意。
      */
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface MockFeignClient {
+        /**
+         * @return 邏輯服務名稱（對應服務發現中的應用名）
+         */
         String name();
+
+        /**
+         * @return 直連 URL；空字串表示改走服務發現（正式 Feign 行為）
+         */
         String url() default "";
     }
 
     /**
-     * Feign 是一個聲明式的 HTTP 客戶端。
-     * 只需定義介面並加上註解，即可呼叫遠端服務。
+     * 宣告式用戶服務客戶端示意：以介面＋HTTP 註解描述遠端契約，無需手寫 RestTemplate。
      */
     @MockFeignClient(name = "user-service", url = "http://localhost:8081")
     public interface UserClient {
+        /**
+         * 依用戶識別碼查詢遠端用戶。
+         *
+         * @param id 用戶主鍵
+         * @return 遠端回傳的用戶資訊字串
+         */
         @GetMapping("/api/users/{id}")
         String getUserById(@PathVariable("id") Long id);
     }
@@ -60,9 +74,15 @@ public class SpringCloudExamples {
      */
 
     /**
-     * gRPC Server 示意代碼。
+     * gRPC 服務端示意骨架（正式應繼承 proto 產生的 {@code *ImplBase}）。
+     * 僅示範請求進入點位置，不含序列化與串流生命週期。
      */
     public static class MyGrpcService { // 實際上應繼承 ***ImplBase
+        /**
+         * 處理示範用 gRPC 請求；正式實作會透過 StreamObserver 回寫回應。
+         *
+         * @param request 客戶端請求內容（示意為字串）
+         */
         public void getMySample(String request) {
             // 邏輯實作
             System.out.println("收到 gRPC 請求: " + request);

@@ -7,29 +7,35 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Group A: Java 核心技術範例
- * 涵蓋 ThreadLocal, Collections, JVM 與 執行緒概念。
+ * 【職責】以可執行方法示範 Java 核心面試題：ThreadLocal、集合效能與 JVM／執行緒概念說明。
+ * 【技巧】結合 ThreadLocal 隔離非執行緒安全物件，並對照 ArrayList／LinkedList 隨機存取成本。
+ * 【概念】面試範例強調「為什麼」與可觀測差異；正式系統應改用執行緒安全 API 或不可變設計。
+ * 【邊界】不負責生產級並發工具選型或完整 GC 調校。
  */
 public class JavaCoreExamples {
 
     // --- (1) ThreadLocal 範例 ---
 
     /**
-     * 使用 ThreadLocal 來儲存每個執行緒獨立的 SimpleDateFormat 實例。
-     * 因為 SimpleDateFormat 是非執行緒安全的 (Non-thread-safe)。
+     * 每個執行緒獨立的 {@link SimpleDateFormat}，避免該類別非執行緒安全造成的格式錯亂。
      */
     private static final ThreadLocal<SimpleDateFormat> dateFormatThreadLocal = 
         ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
     /**
-     * 格式化日期，每個執行緒會使用自己的 SimpleDateFormat 實例。
+     * 以目前執行緒專屬的日期格式器格式化時間，避免多執行緒共用 {@link SimpleDateFormat}。
+     *
+     * @param date 待格式化的時間
+     * @return {@code yyyy-MM-dd HH:mm:ss} 字串
      */
     public String formatDate(Date date) {
         return dateFormatThreadLocal.get().format(date);
     }
 
     /**
-     * 獲取當前執行緒的 ThreadLocal 值。
+     * 回傳目前執行緒名稱，便於對照 ThreadLocal／多執行緒示範的執行脈絡。
+     *
+     * @return 目前執行緒名稱
      */
     public String getThreadNameFromContext() {
         return Thread.currentThread().getName();
@@ -38,9 +44,8 @@ public class JavaCoreExamples {
     // --- (2) 集合時間複雜度比較 ---
 
     /**
-     * 演示 ArrayList 與 LinkedList 的 get 效能差異。
-     * ArrayList: O(1)
-     * LinkedList: O(n)
+     * 對照 ArrayList（隨機存取約 O(1)）與 LinkedList（約 O(n)）在中段 get 的耗時差異，結果輸出至標準輸出。
+     * 僅供面試講解，非嚴謹基準測試。
      */
     public void compareListPerformance() {
         int items = 100000;

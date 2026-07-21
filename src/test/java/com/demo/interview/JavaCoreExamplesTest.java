@@ -10,15 +10,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Java 核心技術範例的單元測試
+ * 覆蓋 {@link JavaCoreExamples}（面試示範：Java 核心）。
+ * 驗證 ThreadLocal 隔離性與 List 效能比較可執行。
  */
 public class JavaCoreExamplesTest {
 
     private final JavaCoreExamples examples = new JavaCoreExamples();
 
     /**
-     * 測試 ThreadLocal 的隔離性。
-     * 驗證多個執行緒同時操作時，格式化的日期結果與執行緒名稱是否正確隔離。
+     * CASE-IV-JAVA-001：ThreadLocal 多執行緒隔離。
+     * Given: 10 執行緒並行；When: formatDate + getThreadNameFromContext；Then: 全部成功且結果獨立。
      */
     @Test
     public void testThreadLocalIndependence() throws InterruptedException {
@@ -56,7 +57,8 @@ public class JavaCoreExamplesTest {
     }
 
     /**
-     * 測試 ArrayList 與 LinkedList 的效能比較邏輯是否可執行。
+     * CASE-IV-JAVA-002：List 效能比較可執行。
+     * Given: 範例內建度量邏輯；When: compareListPerformance；Then: 不拋例外。
      */
     @Test
     public void testPerformanceComparison() {

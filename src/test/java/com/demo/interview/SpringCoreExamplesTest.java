@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Spring 核心與設計模式範例的單元測試
+ * 覆蓋 {@link SpringCoreExamples}（面試示範：Spring 核心／設計模式）。
+ * 驗證 Proxy 前後置處理與 IOC 注入切換行為。
  */
 public class SpringCoreExamplesTest {
 
     /**
-     * 測試代理模式 (Proxy Pattern) 的執行邏輯。
-     * 驗證代理對象是否正確地在目標對象執行前後加入了額外的處理。
+     * CASE-IV-CORE-001：Proxy 前後置處理正確。
+     * Given: RealSubject + ProxySubject；When: request；Then: 結果含前置／業務／後置字串。
      */
     @Test
     public void testProxyPattern() {
@@ -28,8 +29,8 @@ public class SpringCoreExamplesTest {
     }
 
     /**
-     * 測試 IOC (控制反轉) 的模擬邏輯。
-     * 驗證 NotificationProcessor 是否能根據注入的 Service 產生正確的訊息。
+     * CASE-IV-CORE-002：IOC 注入切換 Email／SMS。
+     * Given: EmailService／SmsService；When: NotificationProcessor.process；Then: 訊息字串依注入實作變化。
      */
     @Test
     public void testNotificationProcessorLogic() {

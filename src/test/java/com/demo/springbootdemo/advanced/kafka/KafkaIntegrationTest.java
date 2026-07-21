@@ -1,4 +1,4 @@
-﻿package com.demo.springbootdemo.advanced.kafka;
+package com.demo.springbootdemo.advanced.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Kafka 整合測試
- * 使用嵌入式 Kafka (EmbeddedKafka) 確保在無外部環境下也能跑通
+ * 覆蓋 Kafka 生產者與 EmbeddedKafka 的端到端煙霧測試（訊息層）。
+ * 驗證 sendMessage 在無外部 Broker 時可執行；消費斷言為占位（實務可改 KafkaTestUtils）。
  */
 @SpringBootTest
 @DirtiesContext
@@ -22,6 +22,10 @@ public class KafkaIntegrationTest {
     @Autowired
     private KafkaProducerService producerService;
 
+    /**
+     * CASE-KAFKA-INT-001：發送 payment-topic 訊息不拋錯。
+     * Given: EmbeddedKafka payment-topic；When: sendMessage 後等待 2 秒；Then: 流程完成（占位斷言 true）。
+     */
     @Test
     public void testSendAndReceiveMessage() throws InterruptedException {
         String testMessage = "Test Payment Message";

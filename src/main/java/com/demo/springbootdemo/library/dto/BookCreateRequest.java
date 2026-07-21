@@ -1,11 +1,13 @@
-﻿package com.demo.springbootdemo.library.dto;
+package com.demo.springbootdemo.library.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * 新增圖書請求物件 (DTO)
- * 升級內容：封裝前端發來的資料，並進行參數校驗 (Validation)
+ * 【職責】承載新增／更新圖書的客戶端輸入與格式驗證。
+ * 【技巧】以 Bean Validation 在進入 Service 前擋下空白與過長欄位。
+ * 【概念】請求 DTO 只含客戶端可寫欄位；主鍵與借閱狀態由系統維護，避免被竄改。
+ * 【邊界】不含主鍵、借閱狀態。
  */
 public class BookCreateRequest {
 

@@ -1,4 +1,4 @@
-﻿package com.demo.springbootdemo.library.service;
+package com.demo.springbootdemo.library.service;
 
 import com.demo.springbootdemo.library.dao.BookRepository;
 import com.demo.springbootdemo.library.dto.BookCreateRequest;
@@ -14,11 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 圖書業務邏輯實作類別 (進階版)
- * 升級內容：
- * 1. 使用 SLF4J 日誌系統取代 System.out
- * 2. 使用 Spring Data JPA 管理資料
- * 3. 實作 DTO 轉換邏輯
+ * 【職責】實作圖書 CRUD 與借還規則，並將實體轉為 {@link BookDto}。
+ * 【技巧】透過 {@link BookRepository} 與 {@code @Transactional} 管理寫入一致性，並以 SLF4J 記錄關鍵操作。
+ * 【概念】服務層是業務規則的唯一入口；Controller／gRPC 只轉接，避免多入口出現不同借還邏輯。
+ * 【邊界】不組裝 HTTP 回應、不直接寫 SQL。
  */
 @Service
 public class BookServiceImpl implements BookService {
@@ -29,6 +28,9 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<BookDto> getBooks(Pageable pageable) {
         log.info("正在獲取圖書列表，分頁資訊: {}", pageable);
@@ -36,6 +38,9 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll(pageable).map(this::convertToDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BookDto getBookById(Integer id) {
         return bookRepository.findById(id)
@@ -43,6 +48,9 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new BookNotFoundException(id));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional // 開啟事務管理
     public BookDto createBook(BookCreateRequest request) {
@@ -56,6 +64,9 @@ public class BookServiceImpl implements BookService {
         return convertToDto(savedBook);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public BookDto updateBook(Integer id, BookCreateRequest request) {
@@ -69,6 +80,9 @@ public class BookServiceImpl implements BookService {
         return convertToDto(bookRepository.save(book));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public void deleteBook(Integer id) {
@@ -76,6 +90,10 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>已借出時以 {@link BookNotFoundException} 拒絕（示範用例外型別，非 404 語意）。</p>
+     */
     @Override
     @Transactional
     public BookDto borrowBook(Integer id, String borrowerName) {
@@ -93,6 +111,9 @@ public class BookServiceImpl implements BookService {
         return convertToDto(bookRepository.save(book));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public BookDto returnBook(Integer id) {

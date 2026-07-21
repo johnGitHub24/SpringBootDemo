@@ -1,0 +1,1091 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: "SpringBootDemo API 文件"
+  description: |
+    SpringBootDemo 完整 REST API 文件。
+
+    本系統涵蓋以下功能模組：
+    - **訂單管理**：CRUD 操作，支援訂單狀態管理（PENDING / COMPLETED / CANCELLED）
+    - **圖書館管理**：書籍 CRUD、借閱與歸還、分頁查詢
+    - **測試與驗證**：Java 21 功能測試、Kafka 訊息驗證、TCC 分散式事務、Gateway 狀態
+    - **微服務模擬**：模擬訂單與使用者微服務端點
+    - **即時推播**：WebSocket/STOMP 支付通知推播
+
+    **基礎設施：**
+    - 資料庫：H2 in-memory（`jdbc:h2:mem:testdb`），H2 Console 位於 `/h2-console`
+    - 訊息佇列：Kafka（`localhost:29092`）
+    - 快取：Redis（`localhost:6379`）
+  contact:
+    name: JohnPeng
+    email: john241214@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: "http://localhost:8080"
+    description: "本機開發環境"
+
+tags:
+  - name: "1. 訂單管理"
+    description: "訂單 CRUD 操作，管理訂單生命週期"
+  - name: "2. 圖書館管理"
+    description: "書籍新增、查詢、更新、刪除、借閱與歸還"
+  - name: "3. 測試與驗證"
+    description: "Java 21 功能、Kafka、TCC 事務、Gateway 狀態驗證"
+  - name: "4. 微服務模擬"
+    description: "模擬訂單與使用者微服務（示範 Service Discovery 概念）"
+  - name: "5. 即時推播"
+    description: "WebSocket/STOMP 支付通知推播（REST 觸發端點）"
+
+paths:
+
+  # ═══════════════════════════════════════════════════════
+  # 訂單管理 /api/orders
+  # ═══════════════════════════════════════════════════════
+
+  "/api/orders":
+    get:
+      tags:
+        - "1. 訂單管理"
+      summary: "取得所有訂單"
+      description: "查詢資料庫中所有訂單，回傳完整訂單列表（含子項目）"
+      operationId: getAllOrders
+      responses:
+        200:
+          description: "成功取得訂單列表"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+              example:
+                - id: 1
+                  customerName: "王小明"
+                  productName: "MacBook Pro"
+                  quantity: 1
+                  price: 59900.00
+                  status: "PENDING"
+                  createdAt: "2026-05-21T10:30:00"
+                  items: []
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags:
+        - "1. 訂單管理"
+      summary: "新增訂單"
+      description: "建立一筆新訂單，初始狀態為 PENDING"
+      operationId: createOrder
+      requestBody:
+        description: "訂單建立資料（JSON 格式）"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderRequest"
+            example:
+              customerName: "王小明"
+              productName: "MacBook Pro"
+              quantity: 1
+              price: 59900.00
+              status: "PENDING"
+      responses:
+        200:
+          description: "訂單建立成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+              example:
+                id: 1
+                customerName: "王小明"
+                productName: "MacBook Pro"
+                quantity: 1
+                price: 59900.00
+                status: "PENDING"
+                createdAt: "2026-05-21T10:30:00"
+                items: []
+        400:
+          $ref: "#/components/responses/BadRequest"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/api/orders/{id}":
+    get:
+      tags:
+        - "1. 訂單管理"
+      summary: "依 ID 查詢單一訂單"
+      description: "根據訂單 ID 查詢單一訂單詳細資訊"
+      operationId: getOrderById
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        200:
+          description: "成功取得訂單"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    put:
+      tags:
+        - "1. 訂單管理"
+      summary: "更新訂單"
+      description: "根據訂單 ID 更新訂單資料（客戶名稱、商品、數量、金額、狀態）"
+      operationId: updateOrder
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      requestBody:
+        description: "訂單更新資料"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderRequest"
+            example:
+              customerName: "王小明"
+              productName: "iPhone 15 Pro"
+              quantity: 2
+              price: 35900.00
+              status: "COMPLETED"
+      responses:
+        200:
+          description: "訂單更新成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    delete:
+      tags:
+        - "1. 訂單管理"
+      summary: "刪除訂單"
+      description: "根據訂單 ID 刪除指定訂單"
+      operationId: deleteOrder
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        200:
+          description: "訂單刪除成功"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  # ═══════════════════════════════════════════════════════
+  # 圖書館管理 /library
+  # ═══════════════════════════════════════════════════════
+
+  "/library/info":
+    get:
+      tags:
+        - "2. 圖書館管理"
+      summary: "取得圖書館資訊"
+      description: "回傳圖書館名稱、版本及歡迎訊息"
+      operationId: getLibraryInfo
+      responses:
+        200:
+          description: "成功取得圖書館資訊"
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "圖書館系統 v1.0 — 歡迎使用！"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/library/books":
+    get:
+      tags:
+        - "2. 圖書館管理"
+      summary: "分頁查詢書籍列表"
+      description: "取得書籍列表，支援分頁與排序。預設每頁 5 筆，依 id 排序。"
+      operationId: getBooks
+      parameters:
+        - name: page
+          in: query
+          description: "頁碼（從 0 開始）"
+          required: false
+          schema:
+            type: integer
+            default: 0
+            example: 0
+        - name: size
+          in: query
+          description: "每頁筆數"
+          required: false
+          schema:
+            type: integer
+            default: 5
+            example: 5
+        - name: sort
+          in: query
+          description: "排序欄位"
+          required: false
+          schema:
+            type: string
+            default: "id"
+            example: "id"
+      responses:
+        200:
+          description: "成功取得分頁書籍列表"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PagedBookResponse"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags:
+        - "2. 圖書館管理"
+      summary: "新增書籍"
+      description: "建立一本新書。書名與作者為必填欄位。"
+      operationId: createBook
+      requestBody:
+        description: "書籍建立資料"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookCreateRequest"
+            example:
+              title: "Spring Boot 實戰"
+              author: "Craig Walls"
+              category: "程式設計"
+      responses:
+        201:
+          description: "書籍建立成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDto"
+        400:
+          description: "欄位驗證失敗（書名或作者不可為空）"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/library/books/{id}":
+    get:
+      tags:
+        - "2. 圖書館管理"
+      summary: "依 ID 查詢書籍"
+      description: "根據書籍 ID 查詢單一書籍詳細資訊"
+      operationId: getBookById
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      responses:
+        200:
+          description: "成功取得書籍"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDto"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    put:
+      tags:
+        - "2. 圖書館管理"
+      summary: "更新書籍"
+      description: "根據書籍 ID 更新書籍資料"
+      operationId: updateBook
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      requestBody:
+        description: "書籍更新資料"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookCreateRequest"
+            example:
+              title: "Spring Boot 實戰（第三版）"
+              author: "Craig Walls"
+              category: "程式設計"
+      responses:
+        200:
+          description: "書籍更新成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDto"
+        400:
+          description: "欄位驗證失敗"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    delete:
+      tags:
+        - "2. 圖書館管理"
+      summary: "刪除書籍"
+      description: "根據書籍 ID 刪除指定書籍"
+      operationId: deleteBook
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      responses:
+        204:
+          description: "書籍刪除成功（無回傳內容）"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/library/books/{id}/borrow":
+    post:
+      tags:
+        - "2. 圖書館管理"
+      summary: "借閱書籍"
+      description: "依書籍 ID 辦理借閱，需提供借閱人姓名"
+      operationId: borrowBook
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+        - name: borrower
+          in: query
+          description: "借閱人姓名"
+          required: true
+          schema:
+            type: string
+            example: "李小華"
+      responses:
+        200:
+          description: "借閱成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDto"
+              example:
+                id: 1
+                title: "Spring Boot 實戰"
+                author: "Craig Walls"
+                category: "程式設計"
+                isBorrowed: true
+                borrowerName: "李小華"
+        400:
+          description: "書籍已被借出"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/library/books/{id}/return":
+    post:
+      tags:
+        - "2. 圖書館管理"
+      summary: "歸還書籍"
+      description: "依書籍 ID 辦理歸還，清除借閱人資訊"
+      operationId: returnBook
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      responses:
+        200:
+          description: "歸還成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDto"
+              example:
+                id: 1
+                title: "Spring Boot 實戰"
+                author: "Craig Walls"
+                category: "程式設計"
+                isBorrowed: false
+                borrowerName: null
+        400:
+          description: "書籍尚未被借出"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  # ═══════════════════════════════════════════════════════
+  # 測試與驗證 /api/test
+  # ═══════════════════════════════════════════════════════
+
+  "/api/test/reset":
+    get:
+      tags:
+        - "3. 測試與驗證"
+      summary: "重置測試狀態"
+      description: "重置測試計數器與訊息快取，回傳目前狀態"
+      operationId: resetTest
+      responses:
+        200:
+          description: "重置成功"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "reset"
+                  message:
+                    type: string
+                    example: "測試狀態已重置"
+
+  "/api/test/java21":
+    get:
+      tags:
+        - "3. 測試與驗證"
+      summary: "測試 Java 21 功能"
+      description: |
+        驗證 Java 21 特性是否正常運作，包括：
+        - **虛擬執行緒 (Virtual Threads)**：建立大量虛擬執行緒並量測執行時間
+        - **模式比對 (Pattern Matching)**：驗證 instanceof 模式比對語法
+      operationId: testJava21
+      responses:
+        200:
+          description: "測試結果"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  virtualThreadsOk:
+                    type: boolean
+                    description: "虛擬執行緒測試是否通過"
+                    example: true
+                  virtualThreadsDuration:
+                    type: integer
+                    format: int64
+                    description: "虛擬執行緒執行耗時（毫秒）"
+                    example: 42
+                  patternMatchingOk:
+                    type: boolean
+                    description: "模式比對測試是否通過"
+                    example: true
+                  status:
+                    type: string
+                    description: "整體測試狀態"
+                    example: "ok"
+                  error:
+                    type: string
+                    description: "若發生錯誤，說明錯誤原因"
+                    example: null
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/api/test/kafka/verify":
+    get:
+      tags:
+        - "3. 測試與驗證"
+      summary: "驗證 Kafka 訊息消費"
+      description: |
+        查詢 Kafka Consumer 已消費的訊息數量與最近收到的訊息內容。
+
+        > **注意：** 需先啟動 Docker Compose（Redis + Kafka + Zookeeper）方可使用此功能。
+        > 未啟動時 Kafka 連線失敗屬預期行為，訂單 CRUD 仍可正常運作。
+      operationId: verifyKafka
+      responses:
+        200:
+          description: "Kafka 消費狀態"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  consumedCount:
+                    type: integer
+                    description: "已消費的訊息總筆數"
+                    example: 5
+                  lastMessages:
+                    type: array
+                    description: "最近收到的訊息列表"
+                    items:
+                      type: string
+                    example:
+                      - "Order created: 1"
+                      - "Order created: 2"
+                  status:
+                    type: string
+                    description: "Consumer 狀態"
+                    enum: ["Active", "Idle"]
+                    example: "Active"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/api/test/tcc/workflow":
+    get:
+      tags:
+        - "3. 測試與驗證"
+      summary: "驗證 TCC 分散式事務流程"
+      description: |
+        執行 Seata TCC（Try-Confirm-Cancel）分散式事務流程，驗證三個階段是否正常運作：
+        - **Try 階段**：資源預留
+        - **Confirm 階段**：確認提交
+        - **Cancel 階段**：補償取消（異常時觸發）
+      operationId: testTccWorkflow
+      responses:
+        200:
+          description: "TCC 流程執行結果"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tryPhase:
+                    type: string
+                    description: "Try 階段結果"
+                    example: "SUCCESS"
+                  confirmPhase:
+                    type: string
+                    description: "Confirm 階段結果"
+                    example: "SUCCESS"
+                  status:
+                    type: string
+                    description: "整體流程狀態"
+                    example: "ok"
+                  error:
+                    type: string
+                    description: "錯誤訊息（若有）"
+                    example: null
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/api/test/gateway/status":
+    get:
+      tags:
+        - "3. 測試與驗證"
+      summary: "查詢 Gateway 狀態"
+      description: "取得 API Gateway 啟用狀態與已設定的路由清單說明"
+      operationId: getGatewayStatus
+      responses:
+        200:
+          description: "Gateway 狀態資訊"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                    description: "Gateway 是否已啟用"
+                    example: true
+                  routesDescription:
+                    type: string
+                    description: "已設定路由的描述說明"
+                    example: "/api/ms/orders/** → OrderMicroservice, /api/ms/users/** → UserMicroservice"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/api/test/calculator/add":
+    get:
+      tags:
+        - "3. 測試與驗證"
+      summary: "計算器：整數相加"
+      description: "傳入兩個整數，回傳相加結果（示範工具方法單元測試）"
+      operationId: calculatorAdd
+      parameters:
+        - name: a
+          in: query
+          description: "第一個加數"
+          required: true
+          schema:
+            type: integer
+            example: 5
+        - name: b
+          in: query
+          description: "第二個加數"
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        200:
+          description: "計算結果"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  a:
+                    type: integer
+                    example: 5
+                  b:
+                    type: integer
+                    example: 3
+                  result:
+                    type: integer
+                    example: 8
+                  status:
+                    type: string
+                    example: "ok"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  # ═══════════════════════════════════════════════════════
+  # 微服務模擬 /api/ms
+  # ═══════════════════════════════════════════════════════
+
+  "/api/ms/orders/{id}":
+    get:
+      tags:
+        - "4. 微服務模擬"
+      summary: "模擬訂單微服務"
+      description: |
+        模擬獨立的訂單微服務端點，回傳指定訂單 ID 的模擬資料。
+        用於示範 Service Discovery 與 API Gateway 路由概念。
+      operationId: getMsOrder
+      parameters:
+        - name: id
+          in: path
+          description: "訂單 ID"
+          required: true
+          schema:
+            type: string
+            example: "ORD-001"
+      responses:
+        200:
+          description: "模擬訂單微服務回應"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                    description: "訂單 ID"
+                    example: "ORD-001"
+                  status:
+                    type: string
+                    description: "訂單狀態"
+                    example: "PAID"
+                  amount:
+                    type: number
+                    format: double
+                    description: "訂單金額"
+                    example: 1500.0
+                  source:
+                    type: string
+                    description: "資料來源標識"
+                    example: "Microservice_Order"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  "/api/ms/users/{id}":
+    get:
+      tags:
+        - "4. 微服務模擬"
+      summary: "模擬使用者微服務"
+      description: |
+        模擬獨立的使用者微服務端點，回傳指定使用者 ID 的模擬資料。
+        用於示範 Service Discovery 與 API Gateway 路由概念。
+      operationId: getMsUser
+      parameters:
+        - name: id
+          in: path
+          description: "使用者 ID"
+          required: true
+          schema:
+            type: string
+            example: "USR-001"
+      responses:
+        200:
+          description: "模擬使用者微服務回應"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: "使用者 ID"
+                    example: "USR-001"
+                  name:
+                    type: string
+                    description: "使用者姓名"
+                    example: "王大明"
+                  role:
+                    type: string
+                    description: "使用者角色"
+                    example: "DEVELOPER"
+                  source:
+                    type: string
+                    description: "資料來源標識"
+                    example: "Microservice_User"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  # ═══════════════════════════════════════════════════════
+  # 即時推播 /api/test-push
+  # ═══════════════════════════════════════════════════════
+
+  "/api/test-push":
+    get:
+      tags:
+        - "5. 即時推播"
+      summary: "觸發 WebSocket 推播通知"
+      description: |
+        透過 REST API 觸發 WebSocket/STOMP 推播，將訊息廣播至所有訂閱 `/topic/payments` 頻道的客戶端。
+
+        **WebSocket 連線資訊：**
+        - 端點：`ws://localhost:8080/ws`
+        - 訂閱主題：`/topic/payments`
+        - 傳送訊息：`/app/notify`
+
+        > **注意：** 此 REST 端點用於測試推播，實際應用應透過 STOMP 客戶端連線。
+      operationId: testPush
+      parameters:
+        - name: msg
+          in: query
+          description: "要推播的訊息內容"
+          required: true
+          schema:
+            type: string
+            example: "支付成功：訂單 #1001 已完成"
+      responses:
+        200:
+          description: "推播請求已送出"
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "推播請求已發送"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+# ═══════════════════════════════════════════════════════
+# 共用元件定義
+# ═══════════════════════════════════════════════════════
+
+components:
+  parameters:
+    OrderId:
+      name: id
+      in: path
+      description: "訂單 ID（Long 型別）"
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 1
+
+    BookId:
+      name: id
+      in: path
+      description: "書籍 ID（Integer 型別）"
+      required: true
+      schema:
+        type: integer
+        example: 1
+
+  responses:
+    NotFound:
+      description: "資源不存在"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            status: 404
+            error: "Not Found"
+            message: "找不到指定資源"
+
+    BadRequest:
+      description: "請求格式錯誤或必填欄位缺漏"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            status: 400
+            error: "Bad Request"
+            message: "請求資料格式錯誤"
+
+    InternalServerError:
+      description: "伺服器內部錯誤"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            status: 500
+            error: "Internal Server Error"
+            message: "伺服器發生未預期錯誤，請聯絡系統管理員"
+
+  schemas:
+
+    # ─── 訂單相關 ───────────────────────────────────────
+
+    Order:
+      type: object
+      description: "訂單實體（含子項目）"
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "訂單 ID（系統自動產生）"
+          example: 1
+          readOnly: true
+        customerName:
+          type: string
+          description: "客戶名稱"
+          example: "王小明"
+        productName:
+          type: string
+          description: "商品名稱"
+          example: "MacBook Pro"
+        quantity:
+          type: integer
+          description: "數量"
+          example: 1
+        price:
+          type: number
+          format: double
+          description: "單價"
+          example: 59900.00
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        createdAt:
+          type: string
+          format: date-time
+          description: "建立時間（系統自動產生，不可修改）"
+          example: "2026-05-21T10:30:00"
+          readOnly: true
+        items:
+          type: array
+          description: "訂單子項目列表"
+          items:
+            $ref: "#/components/schemas/OrderItem"
+
+    OrderRequest:
+      type: object
+      description: "新增或更新訂單的請求資料"
+      properties:
+        customerName:
+          type: string
+          description: "客戶名稱"
+          example: "王小明"
+        productName:
+          type: string
+          description: "商品名稱"
+          example: "MacBook Pro"
+        quantity:
+          type: integer
+          description: "數量"
+          example: 1
+        price:
+          type: number
+          format: double
+          description: "單價"
+          example: 59900.00
+        status:
+          type: string
+          description: "訂單狀態（PENDING / COMPLETED / CANCELLED）"
+          enum:
+            - PENDING
+            - COMPLETED
+            - CANCELLED
+          example: "PENDING"
+
+    OrderItem:
+      type: object
+      description: "訂單子項目"
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "子項目 ID"
+          example: 10
+          readOnly: true
+        productName:
+          type: string
+          description: "商品名稱"
+          example: "USB-C 轉接頭"
+        quantity:
+          type: integer
+          description: "數量"
+          example: 2
+        price:
+          type: number
+          format: double
+          description: "單價"
+          example: 490.00
+        subtotal:
+          type: number
+          format: double
+          description: "小計（= price × quantity，系統計算）"
+          example: 980.00
+          readOnly: true
+
+    OrderStatus:
+      type: string
+      description: "訂單狀態"
+      enum:
+        - PENDING
+        - COMPLETED
+        - CANCELLED
+      example: "PENDING"
+
+    # ─── 圖書館相關 ─────────────────────────────────────
+
+    BookCreateRequest:
+      type: object
+      description: "新增或更新書籍的請求資料"
+      required:
+        - title
+        - author
+      properties:
+        title:
+          type: string
+          description: "書名（必填，最長 255 字）"
+          maxLength: 255
+          example: "Spring Boot 實戰"
+        author:
+          type: string
+          description: "作者（必填，最長 100 字）"
+          maxLength: 100
+          example: "Craig Walls"
+        category:
+          type: string
+          description: "書籍分類（選填）"
+          maxLength: 50
+          example: "程式設計"
+
+    BookDto:
+      type: object
+      description: "書籍資料傳輸物件（回應用）"
+      properties:
+        id:
+          type: integer
+          description: "書籍 ID（系統自動產生）"
+          example: 1
+          readOnly: true
+        title:
+          type: string
+          description: "書名"
+          example: "Spring Boot 實戰"
+        author:
+          type: string
+          description: "作者"
+          example: "Craig Walls"
+        category:
+          type: string
+          description: "書籍分類"
+          example: "程式設計"
+        isBorrowed:
+          type: boolean
+          description: "是否已借出"
+          example: false
+        borrowerName:
+          type: string
+          description: "借閱人姓名（未借出時為 null）"
+          example: null
+          nullable: true
+
+    PagedBookResponse:
+      type: object
+      description: "分頁書籍列表回應（Spring Data Page 格式）"
+      properties:
+        content:
+          type: array
+          description: "當頁書籍資料"
+          items:
+            $ref: "#/components/schemas/BookDto"
+        totalElements:
+          type: integer
+          format: int64
+          description: "資料總筆數"
+          example: 25
+        totalPages:
+          type: integer
+          description: "總頁數"
+          example: 5
+        size:
+          type: integer
+          description: "每頁筆數"
+          example: 5
+        number:
+          type: integer
+          description: "目前頁碼（從 0 開始）"
+          example: 0
+        first:
+          type: boolean
+          description: "是否為第一頁"
+          example: true
+        last:
+          type: boolean
+          description: "是否為最後一頁"
+          example: false
+        empty:
+          type: boolean
+          description: "當頁是否無資料"
+          example: false
+
+    # ─── 通用錯誤回應 ────────────────────────────────────
+
+    ErrorResponse:
+      type: object
+      description: "通用錯誤回應格式"
+      properties:
+        status:
+          type: integer
+          description: "HTTP 狀態碼"
+          example: 404
+        error:
+          type: string
+          description: "錯誤類型"
+          example: "Not Found"
+        message:
+          type: string
+          description: "錯誤詳細說明"
+          example: "找不到 ID 為 99 的訂單"
+
+    ValidationError:
+      type: object
+      description: "欄位驗證錯誤回應格式"
+      properties:
+        status:
+          type: integer
+          description: "HTTP 狀態碼"
+          example: 400
+        error:
+          type: string
+          description: "錯誤類型"
+          example: "Bad Request"
+        errors:
+          type: array
+          description: "各欄位驗證錯誤清單"
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: "發生錯誤的欄位名稱"
+                example: "title"
+              message:
+                type: string
+                description: "錯誤訊息"
+                example: "書名不可為空"

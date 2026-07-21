@@ -6,14 +6,31 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 /**
- * Java 21 核心特性學習範例
- * 包含：虛擬線程 (Virtual Threads)、Record Patterns、Pattern Matching for switch、Sequenced Collections
+ * 【職責】以可呼叫方法展示 Java 21 虛擬執行緒、Record Patterns、switch 模式比對與 Sequenced Collections。
+ * 【技巧】結合 {@code Executors.newVirtualThreadPerTaskExecutor}、record 解構與新集合 API。
+ * 【概念】語言新特性應用於真實場景前，先用獨立示範驗證行為與成本差異，學習曲線較可控。
+ * 【邊界】不負責生產業務邏輯；僅供學習與單元驗證。
  */
 public class Java21FeaturesDemo {
 
     /**
-     * 1. 虛擬線程 (Virtual Threads) - Project Loom
-     * 虛擬線程是輕量級線程，大大降低了編寫、維護和觀察高吞吐量並發應用程式的門檻。
+     * 【職責】提供二維座標 Record，供 Record Patterns 解構示範與測試共用。
+     * 【技巧】頂層巢狀 record，避免方法內 local record 造成 instanceof 型別不一致。
+     * 【概念】Record 是不可變資料載體；適合當模式比對的目標型別。
+     */
+    public record Point(int x, int y) {}
+
+    /**
+     * 【職責】提供帶顏色的座標 Record，用於巢狀 Record Patterns。
+     * 【技巧】組合 {@link Point} 與顏色字串。
+     * 【概念】巢狀 record 可一次解構多層欄位，減少手動 getter 鏈。
+     */
+    public record ColoredPoint(Point p, String color) {}
+
+    /**
+     * 【職責】以虛擬執行緒池並行執行大量短延遲任務，回傳總耗時。
+     * 【技巧】{@code try-with-resources} 關閉 {@code newVirtualThreadPerTaskExecutor}。
+     * 【概念】虛擬執行緒降低阻塞 I/O 的執行緒成本；適合高併發等待，而非 CPU 密集計算。
      */
     public long virtualThreadsDemo(int taskCount) {
         long startTime = System.currentTimeMillis();
@@ -21,25 +38,23 @@ public class Java21FeaturesDemo {
             IntStream.range(0, taskCount).forEach(i -> {
                 executor.submit(() -> {
                     try {
-                        // 模擬阻塞操作
                         Thread.sleep(Duration.ofMillis(10));
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                 });
             });
-        } // executor.close() 會等待所有任務完成
+        }
         return System.currentTimeMillis() - startTime;
     }
 
     /**
-     * 2. Record Patterns
-     * 允許解構 Record 以提取其組件，簡化了數據處理。
+     * 以巢狀 Record Patterns 解構 {@link ColoredPoint}，示範型別與欄位一次比對。
+     *
+     * @param obj 待比對物件；僅 {@link ColoredPoint} 會成功解構
+     * @return 成功時回傳顏色與座標描述；否則回傳不匹配提示
      */
     public String recordPatternsDemo(Object obj) {
-        record Point(int x, int y) {}
-        record ColoredPoint(Point p, String color) {}
-
         if (obj instanceof ColoredPoint(Point(int x, int y), String c)) {
             return String.format("顏色: %s, 坐標: (%d, %d)", c, x, y);
         }
@@ -47,8 +62,10 @@ public class Java21FeaturesDemo {
     }
 
     /**
-     * 3. Pattern Matching for switch (進階：Guarded Patterns)
-     * 使用 'when' 子句來增加額外的邏輯判斷。
+     * 以 switch 模式比對（含 guarded patterns）依型別與條件分類輸入。
+     *
+     * @param obj 任意輸入物件
+     * @return 依整數區間或字串內容分類後的描述字串
      */
     public String switchPatternMatchingAdvancedDemo(Object obj) {
         return switch (obj) {
@@ -63,8 +80,9 @@ public class Java21FeaturesDemo {
     }
 
     /**
-     * 4. Sequenced Collections
-     * 引入了新的接口來表示具有確定的遇到順序 (encounter order) 的集合。
+     * 示範 Sequenced Collections 的頭尾插入、讀取與反序走訪能力。
+     *
+     * @return 依序為：開頭、結尾、以及反序後的完整元素列表
      */
     public List<String> sequencedCollectionsDemo() {
         LinkedHashSet<String> list = new LinkedHashSet<>();
@@ -73,12 +91,33 @@ public class Java21FeaturesDemo {
         list.addLast("結尾");
 
         List<String> result = new ArrayList<>();
-        result.add(list.getFirst()); // 獲取第一個
-        result.add(list.getLast());  // 獲取最後一個
-        
-        // 獲取反轉視圖並轉換回 List
+        result.add(list.getFirst());
+        result.add(list.getLast());
         result.addAll(list.reversed().stream().toList());
-        
+
         return result;
+    }
+
+    /**
+     * 驗證 Record Patterns 能否正確解構已知的 {@link ColoredPoint} 測資。
+     *
+     * @return 解構結果符合預期時為 {@code true}
+     */
+    public boolean testRecordPatterns() {
+        Object testInput = new ColoredPoint(new Point(3, 5), "藍色");
+        if (testInput instanceof ColoredPoint(Point(int x, int y), String c)) {
+            return "藍色".equals(c) && x == 3 && y == 5;
+        }
+        return false;
+    }
+
+    /**
+     * 驗證 Sequenced Collections 示範結果的頭尾元素是否符合插入順序語意。
+     *
+     * @return 頭為「開頭」、尾為「結尾」且至少兩元素時為 {@code true}
+     */
+    public boolean testSequencedCollections() {
+        List<String> result = sequencedCollectionsDemo();
+        return result.size() >= 2 && "開頭".equals(result.get(0)) && "結尾".equals(result.get(1));
     }
 }

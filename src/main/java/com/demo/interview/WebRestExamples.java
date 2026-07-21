@@ -10,8 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Group C: REST 與 Web 技術範例
- * 說明 PUT vs PATCH 以及 冪等性。
+ * 【職責】以記憶體 Map 示範 PUT／PATCH 語意與冪等性差異的 REST 面試範例。
+ * 【技巧】薄 {@code @RestController} 對照全量替換與部分更新的 HTTP 行為。
+ * 【概念】PUT 通常表示完整替換且冪等；PATCH 表示部分更新。先用記憶體模型理解語意再接資料庫。
+ * 【邊界】不負責持久化、驗證或真實用戶領域規則。
  */
 @RestController
 @RequestMapping("/api/examples")
@@ -19,15 +21,19 @@ public class WebRestExamples {
 
     private final Map<Long, UserDto> userDatabase = new HashMap<>();
 
+    /**
+     * 初始化一筆示範用戶，供 PUT／PATCH 對照操作。
+     */
     public WebRestExamples() {
         // 預設資料
         userDatabase.put(1L, new UserDto(1L, "Alice", "alice@example.com"));
     }
 
     /**
-     * PUT: 更新「全體」資源。
-     * 語義上，如果請求中缺少某些欄位，原本的資料應被覆蓋或清空。
-     * 是「冪等 (Idempotent)」的。
+     * PUT：以請求本體全量替換資源；缺欄位語意上應覆蓋／清空，且為冪等操作。
+     *
+     * @param user 完整用戶資源本體（含 id）
+     * @return 替換後的用戶資源
      */
     @PutMapping("/users/{id}")
     public UserDto putUpdate(@RequestBody UserDto user) {
@@ -36,8 +42,11 @@ public class WebRestExamples {
     }
 
     /**
-     * PATCH: 更新「部分」資源。
-     * 僅修改請求中提供的欄位，其餘保留。
+     * PATCH：僅套用請求中出現的欄位，其餘保留；適合部分更新場景。
+     *
+     * @param id      目標用戶識別碼
+     * @param updates 欲變更的欄位鍵值（如 name、email）
+     * @return 更新後的用戶；若不存在則為 {@code null}
      */
     @PatchMapping("/users/{id}")
     public UserDto patchUpdate(Long id, @RequestBody Map<String, Object> updates) {
@@ -57,12 +66,22 @@ public class WebRestExamples {
      * - POST: 非冪等 (多次提交可能建立多個新資源)。
      */
 
+    /**
+     * 面試用用戶傳輸物件；欄位公開以便示範 JSON 綁定，非正式領域模型。
+     */
     public static class UserDto {
         public Long id;
         public String name;
         public String email;
 
+        /** 供 Jackson／框架反序列化使用的無參建構子。 */
         public UserDto() {}
+
+        /**
+         * @param id    用戶識別碼
+         * @param name  顯示名稱
+         * @param email 電子郵件
+         */
         public UserDto(Long id, String name, String email) {
             this.id = id;
             this.name = name;

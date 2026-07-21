@@ -7,15 +7,16 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * REST 與 Web 技術範例的單元測試
+ * 覆蓋 {@link WebRestExamples}（面試示範：REST PUT／PATCH 語意）。
+ * 驗證全體替換與部分更新的行為差異。
  */
 public class WebRestExamplesTest {
 
     private final WebRestExamples controller = new WebRestExamples();
 
     /**
-     * 測試 PUT 與 PATCH 在更新資源時的語義差異。
-     * PUT 應視為全體替換，PATCH 應視為部分修正。
+     * CASE-IV-WEB-001：PUT 全體替換、PATCH 部分更新。
+     * Given: 預設使用者；When: putUpdate 再 patchUpdate(name)；Then: PUT 全欄位更新，PATCH 保留未改 Email。
      */
     @Test
     public void testPutVSPatchEffect() {

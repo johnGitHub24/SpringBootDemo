@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpringBootDemo — CodeGraphic</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root { --bg:#0f1419; --surface:#1a2332; --surface2:#243044; --border:#2d3a4f; --text:#e6edf3; --muted:#8b9cb3; --accent:#3b82f6; --accent2:#10b981; --warn:#f59e0b; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:"Segoe UI","Microsoft JhengHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
+    .top { border-bottom:1px solid var(--border); background:linear-gradient(135deg,#1e3a5f 0%,#0f1419 70%); padding:1.5rem 2rem 0; }
+    .top h1 { font-size:1.5rem; margin-bottom:0.25rem; }
+    .top .sub { color:var(--muted); font-size:0.9rem; margin-bottom:1.25rem; }
+    .top .links a { color:var(--accent); text-decoration:none; margin-right:1rem; }
+    .tabs { display:flex; flex-wrap:wrap; gap:0.35rem; }
+    .tab { appearance:none; border:1px solid var(--border); background:var(--surface); color:var(--muted); padding:0.55rem 1.1rem; border-radius:8px 8px 0 0; cursor:pointer; font-size:0.9rem; border-bottom:none; }
+    .tab.active { background:var(--bg); color:var(--accent2); border-color:var(--accent); box-shadow:inset 0 2px 0 var(--accent); }
+    main { padding:1.5rem 2rem 3rem; max-width:1100px; }
+    .panel { display:none; } .panel.active { display:block; }
+    .panel h2 { font-size:1.2rem; border-bottom:2px solid var(--accent); padding-bottom:0.4rem; margin-bottom:0.75rem; }
+    .blurb { color:#c9d4e3; font-size:0.92rem; margin-bottom:1rem; }
+    .blurb li { margin-left:1.1rem; margin-bottom:0.25rem; }
+    .mermaid { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; overflow-x:auto; }
+    .note { margin-top:1rem; background:var(--surface2); border-left:3px solid var(--warn); padding:0.65rem 0.9rem; font-size:0.85rem; color:var(--muted); }
+    footer { padding:0 2rem 2rem; color:var(--muted); font-size:0.8rem; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <h1>SpringBootDemo — CodeGraphic</h1>
+    <p class="sub">圖為主 · Order CRUD · Library · 進階 Kafka/TCC · Vue 前端</p>
+    <p class="links">
+      <a href="md-viewer.html?src=../SpringBootDemo-SPEC.md">規格書（權威）</a>
+      <a href="md-viewer.html?src=architecture.md">architecture.md</a>
+      <a href="md-viewer.html?src=../%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8A.md">使用手冊</a>
+      <a href="swagger.html">API 文件（Swagger）</a>
+    </p>
+    <nav class="tabs">
+      <button type="button" class="tab active" data-tab="order">Order CRUD</button>
+      <button type="button" class="tab" data-tab="library">Library</button>
+      <button type="button" class="tab" data-tab="advanced">進階</button>
+      <button type="button" class="tab" data-tab="packages">套件</button>
+    </nav>
+  </header>
+  <main>
+    <section id="panel-order" class="panel active">
+      <h2>Order CRUD — 四層骨架</h2>
+      <ul class="blurb">
+        <li><code>OrderController</code> → <code>OrderService</code> → JPA → H2。</li>
+        <li>REST <code>/api/orders</code> 標準 CRUD。</li>
+        <li>無 Security（示範用排除 SecurityAutoConfiguration）。</li>
+        <li>Vue 3 ESM 前端 <code>frontend/</code> 呼叫 API。</li>
+      </ul>
+      <div class="mermaid">
+flowchart LR
+  V[Vue frontend] --> OC[OrderController]
+  OC --> OS[OrderService]
+  OS --> OR[OrderRepository]
+  OR --> H2[(H2 mem)]
+      </div>
+      <p class="note">Port 8080；驗證 <code>.\gradlew.bat check</code>。</p>
+    </section>
+    <section id="panel-library" class="panel" hidden>
+      <h2>Library — 第二模組示範</h2>
+      <ul class="blurb">
+        <li><code>BookController</code> 獨立 Library 路由。</li>
+        <li>展示多 Controller 共存同一 Spring Boot。</li>
+        <li>同樣 Controller → Service → Repository 分層。</li>
+        <li>教學用模組邊界，非微服務拆分。</li>
+      </ul>
+      <div class="mermaid">
+flowchart TB
+  subgraph orders ["/api/orders"]
+    OC[OrderController]
+  end
+  subgraph library ["/library"]
+    BC[BookController]
+  end
+  OC --> OS[OrderService]
+  BC --> BS[BookService]
+  OS --> DB[(H2)]
+  BS --> DB
+      </div>
+      <p class="note">詳見 <code>使用手冊.md</code> Library 章節。</p>
+    </section>
+    <section id="panel-advanced" class="panel" hidden>
+      <h2>進階 — Kafka / TCC / WebSocket</h2>
+      <ul class="blurb">
+        <li><code>compose.yaml</code>：Redis + Kafka + Zookeeper 可選。</li>
+        <li><code>advanced.*</code>：SimulatedOrder／TCC 示範。</li>
+        <li>WebSocket <code>PaymentNotificationController</code>。</li>
+        <li>Java 21 語法示範 <code>Java21FeaturesDemo</code>。</li>
+      </ul>
+      <div class="mermaid">
+flowchart LR
+  APP[Spring Boot] --> K[Kafka optional]
+  APP --> R[Redis optional]
+  APP --> WS[WebSocket notify]
+  APP --> TCC[TCC demo]
+      </div>
+      <p class="note">進階模組不影響 Order CRUD 主線 <code>check</code> 綠燈。</p>
+    </section>
+    <section id="panel-packages" class="panel" hidden>
+      <h2>套件 — com.demo 地圖</h2>
+      <ul class="blurb">
+        <li><code>controller</code> / <code>service</code> / <code>repository</code> / <code>model</code>。</li>
+        <li><code>advanced.*</code> 進階實驗包。</li>
+        <li><code>frontend/app.js</code> Vue 3 ESM。</li>
+        <li><code>test/suite.js</code> 瀏覽器測試。</li>
+      </ul>
+      <div class="mermaid">
+flowchart TB
+  subgraph core [com.demo]
+    C[controller]
+    S[service]
+    R[repository]
+    M[model/dto]
+  end
+  subgraph ext [optional]
+    ADV[advanced]
+    FE[frontend]
+  end
+  C --> S --> R
+  FE --> C
+      </div>
+      <p class="note">EOS 繼承 eos-minimal @ 0.1.5。</p>
+    </section>
+  </main>
+  <footer>CodeGraphic · 非權威 · 衝突以規格書為準 · Mermaid CDN</footer>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "loose" });
+    const panels = { order: document.getElementById("panel-order"), library: document.getElementById("panel-library"), advanced: document.getElementById("panel-advanced"), packages: document.getElementById("panel-packages") };
+    const rendered = new Set(["order"]);
+    async function renderPanel(id) { if (rendered.has(id)) return; await mermaid.run({ nodes: panels[id].querySelectorAll(".mermaid") }); rendered.add(id); }
+    mermaid.run({ nodes: panels.order.querySelectorAll(".mermaid") });
+    document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", async () => {
+      const id = tab.dataset.tab;
+      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t === tab));
+      Object.entries(panels).forEach(([k, p]) => { p.classList.toggle("active", k === id); p.hidden = k !== id; });
+      await renderPanel(id);
+    }));
+  </script>
+</body>
+</html>

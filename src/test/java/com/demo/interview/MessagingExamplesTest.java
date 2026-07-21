@@ -4,15 +4,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 消息佇列範例的單元測試
+ * 覆蓋 {@link MessagingExamples}（面試示範：訊息佇列路由邏輯）。
+ * 驗證 RabbitMQ Topic 交換器 '#'／'*' 語意的正則模擬。
  */
 public class MessagingExamplesTest {
 
     private final MessagingExamples examples = new MessagingExamples();
 
     /**
-     * 測試 RabbitMQ 的 Topic 交換器路由邏輯。
-     * 驗證正則模擬是否正確處理 '#' (多詞匹配) 與 '*' (單詞匹配) 的語義。
+     * CASE-IV-MSG-001：Topic 路由 '#' 與 '*' 語意正確。
+     * Given: 模式 usa.#／usa.*；When: routeMessageWithTopic；Then: '#' 多詞匹配、'*' 僅單詞匹配。
      */
     @Test
     public void testRabbitMQTopicRoutingLogic() {
