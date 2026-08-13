@@ -32,8 +32,7 @@
     <p class="sub">圖為主 · Order CRUD · Library · 進階 Kafka/TCC · Vue 前端</p>
     <p class="links">
       <a href="../SpringBootDemo-SPEC.html">規格書（權威）</a>
-      <a href="architecture.html">architecture</a>
-      <a href="testing.html">testing</a>
+      <a href="architecture.html">architecture.md</a>
       <a href="../使用手冊.html">使用手冊</a>
       <a href="swagger.html">API 文件（Swagger）</a>
     </p>
@@ -60,7 +59,7 @@ flowchart LR
   OS --> OR[OrderRepository]
   OR --> H2[(H2 mem)]
       </div>
-      <p class="note">Port 8080；驗證 <code>.\scripts\check.ps1</code>。詳見 <a href="testing.html">testing.html</a>。</p>
+      <p class="note">Port 8080；驗證 <code>.\gradlew.bat check</code>。</p>
     </section>
     <section id="panel-library" class="panel" hidden>
       <h2>Library — 第二模組示範</h2>
@@ -83,7 +82,7 @@ flowchart TB
   OS --> DB[(H2)]
   BS --> DB
       </div>
-      <p class="note">詳見 <a href="../使用手冊.html">使用手冊</a> Library 章節。</p>
+      <p class="note">詳見 <code>使用手冊.md</code> Library 章節。</p>
     </section>
     <section id="panel-advanced" class="panel" hidden>
       <h2>進階 — Kafka / TCC / WebSocket</h2>
@@ -125,7 +124,7 @@ flowchart TB
   C --> S --> R
   FE --> C
       </div>
-      <p class="note">EOS 繼承 eos-minimal @ 0.1.10。</p>
+      <p class="note">EOS 繼承 eos-minimal @ 0.1.5。</p>
     </section>
   </main>
   <footer>CodeGraphic · 非權威 · 衝突以規格書為準 · Mermaid CDN</footer>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot 核心技術深度解析專題</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.25em;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+
+        nav {
+            background: #fff;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: color 0.3s;
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+            background: #f1f5f9;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 60px auto;
+            padding: 0 25px;
+        }
+
+        section {
+            background: var(--card-bg);
+            padding: 60px;
+            border-radius: 28px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            font-size: 2.3em;
+            color: var(--primary);
+            border-left: 12px solid var(--accent);
+            padding-left: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            font-size: 1.7em;
+            color: var(--accent);
+            margin-top: 45px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .mermaid {
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #f1f5f9;
+            border-radius: 20px;
+            margin: 35px 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.01);
+        }
+
+        .highlight-box {
+            background: #f0f9ff;
+            border-left: 8px solid var(--accent);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 0 15px 15px 0;
+            color: #1e40af;
+        }
+
+        ul {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        .tag-label {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 30px;
+            border-radius: 15px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.7;
+            border: 1px solid #334155;
+        }
+
+        .code-inline {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 100px;
+            background: #fff;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .grid-item {
+            border: 1px solid #e2e8f0;
+            padding: 30px;
+            border-radius: 20px;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Spring Boot 高階架構專題解析</h1>
+        <p>聚焦全域系統、分層模型、異步訊息、一致性事務與高效通訊的深度文檔</p>
+    </header>
+
+    <nav>
+        <a href="#arch">1. 全域架構</a>
+        <a href="#lib">2. Library 分層</a>
+        <a href="#kafka">3. Kafka 框架</a>
+        <a href="#seata">4. Seata TCC</a>
+        <a href="#grpc">5. gRPC 通訊</a>
+    </nav>
+
+    <div class="container">
+        <!-- 1. 全域系統架構圖 -->
+        <section id="arch">
+            <h2>1. 全域系統架構圖 (System Architecture)</h2>
+            <div class="tag-label">Framework Overview</div>
+            <p>本專案採用典型的雲原生微服務拓樸結構，結合了 API 網關、核心業務邏輯與非同步訊息骨幹。</p>
+            <div class="mermaid">
+                graph TD
+                subgraph "存取與路由 (Ingress)"
+                User((使用者 Client)) -->|REST/WS| GW[Spring Cloud Gateway MVC]
+                end
+
+                subgraph "核心業務引擎 (Core Logic)"
+                GW -->|同步呼叫| Lib[Library Module]
+                Lib <--> Cache[(Redis Cache)]
+                    Lib --> DB[(H2/SQL Database)]
+                    end
+
+                    subgraph "異步與通訊 (Communication)"
+                    GW -->|異步觸發| KP[Kafka Producer]
+                    GW -->|分散式事務| TCC[Seata Coordinator]
+                    GW -->|極速調用| gRPC[gRPC Server]
+                    end
+
+                    subgraph "通知系統 (Real-time)"
+                    KP -->|消息流| Topic{Kafka Topic}
+                    Topic --> KC[Kafka Consumer]
+                    KC --> WS[WebSocket Broker]
+                    WS -->|狀態推播| User
+                    end
+
+                    style GW fill:#1d4ed8,color:#fff
+                    style Lib fill:#334155,color:#fff
+                    style KP fill:#ea580c,color:#fff
+                    style gRPC fill:#16a34a,color:#fff
+            </div>
+            <div class="highlight-box">
+                <ul>
+                    <li><strong>Gateway MVC</strong>: 統一請求入口，執行跨域處理與負載平衡。</li>
+                    <li><strong>雙模存取</strong>: 結合 JPA 持久化與 Redis 高頻快取機制。</li>
+                    <li><strong>異步骨幹</strong>: 以 Kafka 為中心的事件驅動架構，極大化系統吞吐量。</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. Library 核心分層與數據流 -->
+        <section id="lib">
+            <h2>2. Library 核心分層與數據流</h2>
+            <div class="tag-label">Modular Design</div>
+            <p>深度解析單機核心模組的物件組織方式，確保代碼具備高內聚、低耦合的特性。</p>
+
+            <h3>物件相依與數據傳遞模型</h3>
+            <div class="mermaid">
+                graph LR
+                C[BookController] -- "DTO Input" --> S[BookService]
+                S -- "Business Rule" --> R[BookRepository]
+                R -- "ORM Query" --> E[Book Entity]
+                S -- "Mapping" --> D[BookDto]
+                D -- "JSON Output" --> C
+                style E fill:#fecaca
+                style D fill:#d1fae5
+            </div>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h4>分層職責</h4>
+                    <ul>
+                        <li><strong>Controller</strong>: 負責 Request 映射、參數校驗與 HTTP 回應。</li>
+                        <li><strong>Service</strong>: 核心業務邏輯，包含事務 (Transaction) 邊界。</li>
+                        <li><strong>Repository</strong>: 利用 JPA 介面封裝資料庫 CRUD 操作。</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>數據流向</h4>
+                    <p>外部傳入 <span class="code-inline">BookCreateRequest</span>，經由 Service 轉換成 <span
+                            class="code-inline">Book Entity</span> 持久化，最終回傳 <span class="code-inline">BookDto</span>
+                        給前端。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 高併發：Kafka 非同步訊息框架 -->
+        <section id="kafka">
+            <h2>3. 高併發：Kafka 非同步訊息框架</h2>
+            <div class="tag-label">Throughput Optimization</div>
+            <p>詳解非同步訊息從生產、傳輸到消費推播的完整生命週期圖解。</p>
+
+            <div class="mermaid">
+                stateDiagram-v2
+                [*] --> SendMessage: 調用 KafkaProducerService
+                SendMessage --> Batching: 送入 Linger 緩存 (5ms)
+                Batching --> KafkaCluster: 批次壓縮發送 (Snappy)
+                KafkaCluster --> TopicConsumer: 異步監聽觸發
+                TopicConsumer --> WebSocketTrigger: 更新即時通知
+                WebSocketTrigger --> [*]
+            </div>
+
+            <pre><code># 優化併發的關鍵配置參數
+spring.kafka.producer.batch-size=16384     # 每批次 Bytes
+spring.kafka.producer.properties.linger.ms=5 # 等待更多訊息組包
+spring.kafka.producer.compression-type=snappy # 高效率壓縮</code></pre>
+        </section>
+
+        <!-- 4. 分散式事務：Seata TCC 框架流程 -->
+        <section id="seata">
+            <h2>4. 分散式事務：Seata TCC 框架流程</h2>
+            <div class="tag-label">Data Consistency</div>
+            <p>在複雜的微服務調用中，如何透過 TCC 模型確保各節點間的數據達成最終一致性。</p>
+
+            <div class="mermaid">
+                sequenceDiagram
+                participant Coordinator as Seata Manager (TC)
+                participant Action as TCC Action (Try-Confirm-Cancel)
+
+                Coordinator->>Action: [第一階段: Try] 預留資源 (檢查庫存/凍結資金)
+                alt 成功
+                Coordinator->>Action: [第二階段: Confirm] 真正的業務提交
+                else 失敗
+                Coordinator->>Action: [第二階段: Cancel] 釋放預留資源 (回滾)
+                end
+            </div>
+            <div class="highlight-box">
+                <ul>
+                    <li><strong>Try</strong>: 完成所有業務檢查，預留必要的業務資源。</li>
+                    <li><strong>Confirm</strong>: 不再做檢查，直接提交業務，必須保證冪等。</li>
+                    <li><strong>Cancel</strong>: 回放 Try 階段預留的資源，必須保證冪等。</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 5. 高效通訊：gRPC 通訊框架 -->
+        <section id="grpc">
+            <h2>5. 高效通訊：gRPC 通訊框架</h2>
+            <div class="tag-label">Internal Performance</div>
+            <p>使用二進制序列化 (Protobuf) 取代 JSON，極大化服務間通訊效能並減少額外頻寬損耗。</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h4>Protobuf 定義</h4>
+                    <pre><code>service BookService {
+  rpc GetBook(BookRequest) 
+    returns (BookResponse);
+}
+message BookResponse {
+  int32 id = 1;
+  string title = 2;
+  bool is_borrowed = 3;
+}</code></pre>
+                </div>
+                <div class="grid-item">
+                    <h4>通訊優勢</h4>
+                    <ul>
+                        <li><strong>格式更小</strong>: 二進制封裝，比 JSON 小 70% 以上。</li>
+                        <li><strong>速度更快</strong>: 編解碼效能優於標準 REST。</li>
+                        <li><strong>強型別介面</strong>: 原生 IDL 確保服務間契約不破壞。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mermaid">
+                graph LR
+                Client[Client Stub] -- "HTTP/2 (Binary)" --> Server[Server Implement]
+                Server -- "Protobuf Decode" --> Svc[Logic]
+                Svc -- "Return Stream" --> Client
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Spring Boot 極致架構專題解析 | 2026 年度編修 | Antigravity AI Powered</p>
+    </footer>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+</body>
+
+</html>

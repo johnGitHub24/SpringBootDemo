@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpringBootDemo Specification</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg:#0f1419; --surface:#1a2332; --surface2:#243044; --border:#2d3a4f;
+      --text:#e6edf3; --muted:#8b9cb3; --accent:#3b82f6; --accent2:#10b981; --warn:#f59e0b;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; font-family:"Segoe UI","Microsoft JhengHei",sans-serif;
+      background:var(--bg); color:var(--text); line-height:1.65;
+    }
+    .bar {
+      position:sticky; top:0; z-index:10;
+      display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;
+      padding:0.75rem 1.25rem; background:var(--surface);
+      border-bottom:1px solid var(--border);
+    }
+    .bar a { color:var(--accent); text-decoration:none; }
+    .bar .src { color:var(--muted); font-size:0.85rem; }
+    .bar .badge {
+      font-size:0.75rem; color:var(--warn); border:1px solid var(--warn);
+      border-radius:4px; padding:0.1rem 0.45rem;
+    }
+    main { max-width:880px; margin:0 auto; padding:1.5rem 1.25rem 3rem; }
+    h1,h2,h3,h4 { line-height:1.3; }
+    h1 { font-size:1.7rem; border-bottom:2px solid var(--accent); padding-bottom:0.4rem; }
+    h2 { font-size:1.3rem; margin-top:1.75rem; border-bottom:1px solid var(--border); padding-bottom:0.3rem; }
+    h3 { font-size:1.1rem; margin-top:1.25rem; color:var(--accent2); }
+    a { color:var(--accent); }
+    code, pre { font-family:Consolas,"Courier New",monospace; }
+    code { background:var(--surface2); padding:0.1rem 0.35rem; border-radius:4px; font-size:0.9em; }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:1rem; overflow-x:auto; }
+    pre code { background:transparent; padding:0; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0; font-size:0.92rem; }
+    th, td { border:1px solid var(--border); padding:0.45rem 0.65rem; text-align:left; }
+    th { background:var(--surface2); }
+    blockquote {
+      margin:1rem 0; padding:0.5rem 0.9rem; border-left:3px solid var(--warn);
+      background:var(--surface2); color:var(--muted);
+    }
+    .mermaid { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1rem; overflow-x:auto; }
+    hr { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
+    footer { max-width:880px; margin:0 auto; padding:0 1.25rem 2rem; color:var(--muted); font-size:0.8rem; }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a href="docs/codeGraphic.html">← CodeGraphic</a>
+    <span class="badge">companion HTML</span>
+    <span class="src">來源（權威）：SpringBootDemo-SPEC.md</span>
+  </div>
+  <main>
+<h1>SpringBootDemo Specification</h1>
+<blockquote>
+<p><strong>Authority contract.</strong> Conflicts resolve to this file.<br />
+EOS docs standard: EngineeringOS <code>knowledge/documentation.md</code></p>
+</blockquote>
+<h2>0. Document map</h2>
+<table>
+<thead>
+<tr>
+  <th>File</th>
+  <th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>This file</td>
+  <td>Master spec (authority)</td>
+</tr>
+<tr>
+  <td><a href="README.html">README.md</a></td>
+  <td>Entry</td>
+</tr>
+<tr>
+  <td><a href="%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8A.html">使用手冊.md</a></td>
+  <td>API 操作與故障排除（教學）</td>
+</tr>
+<tr>
+  <td><a href="CLAUDE.html">CLAUDE.md</a></td>
+  <td>Thin AI rules（EOS）</td>
+</tr>
+<tr>
+  <td><a href="docs/architecture.html">docs/architecture.md</a></td>
+  <td>Architecture</td>
+</tr>
+<tr>
+  <td><a href="docs/testing.html">docs/testing.md</a></td>
+  <td>Test / DoD</td>
+</tr>
+<tr>
+  <td><a href="docs/%E8%B3%87%E6%96%99%E5%BA%AB%E8%A8%AD%E8%A8%88.html">docs/資料庫設計.md</a></td>
+  <td>DB / JPA</td>
+</tr>
+<tr>
+  <td><a href="docs/%E6%B8%AC%E8%A9%A6%E8%88%87CI.html">docs/測試與CI.md</a></td>
+  <td>Check commands</td>
+</tr>
+</tbody>
+</table>
+<h2>1. Scope</h2>
+<ul>
+<li><strong>Purpose：</strong> Spring Boot 訂單 CRUD 示範，附 Redis／Kafka／Library／進階模組教學。</li>
+<li><strong>Stack：</strong> Java 21 · Spring Boot 3.2.2 · Spring MVC · JPA · H2 ·（可選）Redis、Kafka · Vue 3 ESM 前端</li>
+<li><strong>Non-goals：</strong> 正式 JWT 授權（Security 已 exclude）、真實撮合、生產級 Gateway</li>
+</ul>
+<h2>2. Architecture</h2>
+<p>See <a href="docs/architecture.html">docs/architecture.md</a>.</p>
+<h2>3. API / Contract</h2>
+<p>來源：<code>OrderController</code>、<code>使用手冊.md</code>。Base：<code>http://localhost:8080</code></p>
+<table>
+<thead>
+<tr>
+  <th>Method</th>
+  <th>Path</th>
+  <th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>GET</td>
+  <td><code>/api/orders</code></td>
+  <td>查詢全部訂單</td>
+</tr>
+<tr>
+  <td>GET</td>
+  <td><code>/api/orders/{id}</code></td>
+  <td>查單筆；無則 404</td>
+</tr>
+<tr>
+  <td>POST</td>
+  <td><code>/api/orders</code></td>
+  <td>建立（body：<code>OrderRequest</code>）</td>
+</tr>
+<tr>
+  <td>PUT</td>
+  <td><code>/api/orders/{id}</code></td>
+  <td>更新；無則 404</td>
+</tr>
+<tr>
+  <td>DELETE</td>
+  <td><code>/api/orders/{id}</code></td>
+  <td>刪除</td>
+</tr>
+</tbody>
+</table>
+<p>附屬示範（非主契約）：<code>BookController</code> → <code>/library/info</code>、<code>/library/books</code>（分頁 CRUD）。</p>
+<h2>4. Test DoD</h2>
+<ul>
+<li>[ ] <code>.\gradlew.bat check</code> green</li>
+<li>[ ] Happy path + not-found path covered for <code>/api/orders</code></li>
+<li>[ ]（可選）瀏覽器 <code>test/suite.js</code> 對跑中後端通過</li>
+</ul>
+<h2>5. Changelog</h2>
+<table>
+<thead>
+<tr>
+  <th>Date</th>
+  <th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>2026-07-10</td>
+  <td>Filled from Controllers／使用手冊／CLAUDE；EOS 0.1.4 docs</td>
+</tr>
+<tr>
+  <td>2026-07-10</td>
+  <td>Created from EOS documentation standard skeleton</td>
+</tr>
+</tbody>
+</table>
+
+  </main>
+  <footer>由 eos-minimal/hooks/md-to-companion-html 產生 · 請改 .md 後重跑腳本 · 勿當權威契約</footer>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: "dark", securityLevel: "loose" });
+  </script>
+</body>
+</html>

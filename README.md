@@ -17,7 +17,7 @@
 | [使用手冊.md](使用手冊.md) | 操作手冊 |
 | [CLAUDE.md](CLAUDE.md) | AI 薄規則 |
 | [scripts/README.md](scripts/README.md) | 驗證／啟動腳本 |
-
+| [docs/swagger.html](docs/swagger.html) | **API（Swagger／介面）** |
 ## 快速開始
 
 ### 驗證
