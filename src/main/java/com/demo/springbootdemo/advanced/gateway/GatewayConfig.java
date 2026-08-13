@@ -22,6 +22,18 @@ import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunction
 @Configuration
 public class GatewayConfig {
 
+    /** 對外用戶閘道路徑；與 {@link #USER_DOWNSTREAM_PATTERN} 成對，供單元測試對照改寫契約。 */
+    public static final String USER_PROXY_PATTERN = "/get-users/{segment}";
+
+    /** 用戶下游內部路徑；閘道 {@code setPath} 後的實際呼叫目標。 */
+    public static final String USER_DOWNSTREAM_PATTERN = "/api/ms/users/{segment}";
+
+    /** 對外訂單閘道路徑；與 {@link #ORDER_DOWNSTREAM_PATTERN} 成對。 */
+    public static final String ORDER_PROXY_PATTERN = "/get-orders/{segment}";
+
+    /** 訂單下游內部路徑；閘道 {@code setPath} 後的實際呼叫目標。 */
+    public static final String ORDER_DOWNSTREAM_PATTERN = "/api/ms/orders/{segment}";
+
     @Value("${gateway.backend-base-url:http://localhost:8080}")
     private String backendBaseUrl;
 
@@ -33,8 +45,8 @@ public class GatewayConfig {
     @Bean
     public RouterFunction<ServerResponse> userServiceRoute() {
         return route("user_service")
-            .route(path("/get-users/{segment}"), http(backendBaseUrl))
-            .filter(setPath("/api/ms/users/{segment}"))
+            .route(path(USER_PROXY_PATTERN), http(backendBaseUrl))
+            .filter(setPath(USER_DOWNSTREAM_PATTERN))
             .filter((request, next) -> {
                 log.info("【Gateway】 收到請求: {} {}", request.method(), request.path());
                 return next.handle(request);
@@ -50,8 +62,8 @@ public class GatewayConfig {
     @Bean
     public RouterFunction<ServerResponse> orderServiceRoute() {
         return route("order_service")
-            .route(path("/get-orders/{segment}"), http(backendBaseUrl))
-            .filter(setPath("/api/ms/orders/{segment}"))
+            .route(path(ORDER_PROXY_PATTERN), http(backendBaseUrl))
+            .filter(setPath(ORDER_DOWNSTREAM_PATTERN))
             .filter((request, next) -> {
                 log.info("【Gateway】 收到請求: {} {}", request.method(), request.path());
                 return next.handle(request);

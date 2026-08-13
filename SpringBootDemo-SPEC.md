@@ -14,7 +14,7 @@
 | [docs/architecture.md](docs/architecture.md) | Architecture |
 | [docs/testing.md](docs/testing.md) | Test / DoD |
 | [docs/資料庫設計.md](docs/資料庫設計.md) | DB / JPA |
-| [docs/測試與CI.md](docs/測試與CI.md) | Check commands |
+| [docs/testing.md](docs/testing.md) | Check commands |
 
 ## 1. Scope
 
@@ -42,13 +42,17 @@ See [docs/architecture.md](docs/architecture.md).
 
 ## 4. Test DoD
 
-- [ ] `.\gradlew.bat check` green
-- [ ] Happy path + not-found path covered for `/api/orders`
+- [x] `.\scripts\check.ps1` green（`gradlew check`＝unit + `/api/`／`/integration/`）
+- [x] Happy + not-found：`/api/orders`（CASE-ORDER-001／002）、`/library`（CASE-BOOK-*）
+- [x] Gateway／OpenAPI 成對；Kafka INT 成對
 - [ ]（可選）瀏覽器 `test/suite.js` 對跑中後端通過
+
+**單層（僅單元，無 HTTP）：** `CASE-IV-*`、`CASE-J21-*`、`CASE-KAFKA-PROD-001`、`CASE-KAFKA-HC-001`、`CASE-TCC-001`。詳見 [docs/testing.md](docs/testing.md)。
 
 ## 5. Changelog
 
 | Date | Note |
 |------|------|
-| 2026-07-10 | Filled from Controllers／使用手冊／CLAUDE；EOS 0.1.4 docs |
+| 2026-08-13 | 成對 Case：ORDER／BOOK／GW／OPENAPI／KAFKA-INT；單層 IV／J21／TCC 標註；check.ps1 |
+| 2026-07-10 | Filled from Controllers／使用手冊／CLAUDE；EOS 0.1.10 docs |
 | 2026-07-10 | Created from EOS documentation standard skeleton |

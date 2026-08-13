@@ -1,5 +1,6 @@
-package com.demo.springbootdemo;
+package com.demo.api;
 
+import com.demo.springbootdemo.SpringBootDemoApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,13 +12,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * 【職責】驗證 springdoc 端點：{@code /v3/api-docs} 可用且帶正確 metadata。
- * 【技巧】{@code @SpringBootTest} + MockMvc；關閉 seata 避免外部依賴。
- * 【概念】docs/swagger.html 依賴此端點，契約測試防止規格與實作漂移。
+ * 【職責】驗證 springdoc 端點 {@code /v3/api-docs} 可用且 metadata 正確。
+ * 【技巧】{@code @SpringBootTest} + MockMvc；測試資源關閉 seata／改 simple cache。
+ * 【概念】與 {@code OpenApiConfigTest} 共用 CASE-OPENAPI-001：單元查 Bean 標題，整合查 HTTP 契約。
  */
-@SpringBootTest(classes = SpringBootDemoApplication.class, properties = "seata.enabled=false")
+@SpringBootTest(classes = SpringBootDemoApplication.class, properties = {
+        "seata.enabled=false",
+        "spring.cache.type=simple"
+})
 @AutoConfigureMockMvc
-class OpenApiDocsTest {
+class OpenApiDocsIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

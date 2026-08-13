@@ -1,7 +1,7 @@
-﻿# SpringBootDemo — 專案規則（薄）
+# SpringBootDemo — 專案規則（薄）
 
-繼承：EngineeringOS eos-minimal @ 0.1.5  
-公版路徑：`d:\ClaudeCode\EngineeringOS\eos-minimal\`  
+繼承：EngineeringOS eos-minimal @ **0.1.10**  
+公版：`EngineeringOS/eos-minimal/`  
 權威規格：[SpringBootDemo-SPEC.md](SpringBootDemo-SPEC.md)
 
 ## 與公版差異
@@ -11,7 +11,8 @@
 - Security: **排除** `SecurityAutoConfiguration`（示範用）
 - DB: H2 in-memory（`jdbc:h2:mem:testdb`）
 - Frontend: Vue 3 ESM（`frontend/`）；瀏覽器測試 `test/suite.js`
-- 驗證入口：`.\gradlew.bat check`
+- 驗證入口：`.\scripts\check.ps1`（載入 JDK 21 後 `gradlew check`）
+- 本機 Demo：IntelliJ／Gradle `bootRun`（**勿**對 `*Application` 綠箭頭）
 
 ## 本專案專屬
 
@@ -22,7 +23,7 @@
 
 ## 註解深度
 - comment_verbosity: **detailed**
-- 權威：`EngineeringOS/eos-minimal/knowledge/comments.md` §0／§3b（eos-minimal @ 0.1.5）
+- 權威：`EngineeringOS/eos-minimal/knowledge/comments.md` §0／§3b（eos-minimal @ 0.1.10）
 - 結構：【職責】【技巧】【概念】；簡單 getter 可併入類別說明
 
 

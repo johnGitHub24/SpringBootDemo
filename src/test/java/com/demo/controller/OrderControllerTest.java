@@ -73,4 +73,16 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
+
+    /**
+     * CASE-ORDER-002：查無訂單回 404。
+     * Given: Service 回 empty；When: GET /api/orders/999；Then: 404。
+     */
+    @Test
+    public void testGetOrderNotFound() throws Exception {
+        given(orderService.getOrderById(999L)).willReturn(java.util.Optional.empty());
+
+        mockMvc.perform(get("/api/orders/999"))
+                .andExpect(status().isNotFound());
+    }
 }
