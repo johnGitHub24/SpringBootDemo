@@ -1,4 +1,4 @@
-# SpringBootDemo - portable env (no hardcoded JDK paths)
+﻿# SpringBootDemo - portable env (no hardcoded JDK paths)
 # Copy portable-env.ps1 from eos-minimal/hooks when cloning; env.ps1 stays thin.
 
 $ErrorActionPreference = 'Stop'

@@ -1,4 +1,4 @@
-# API 測試腳本
+﻿# API 測試腳本
 $baseUrl = "http://localhost:8080/api/orders"
 
 Write-Host "=== 測試 GET 所有訂單 ===" -ForegroundColor Green

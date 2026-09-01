@@ -1,4 +1,4 @@
-# SpringBootDemo — verification entry (portable; Windows)
+﻿# SpringBootDemo — verification entry (portable; Windows)
 # Thin: load env then gradlew check. Do not add demo/batch logic here.
 
 . "$PSScriptRoot\env.ps1"

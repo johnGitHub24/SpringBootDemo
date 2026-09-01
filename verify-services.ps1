@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 # 服務驗證腳本
 
 Write-Host "========================================" -ForegroundColor Cyan
