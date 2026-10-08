@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * 【職責】以註解與示意型別說明 Gateway／Feign／gRPC 等微服務通訊概念。
- * 【技巧】用巢狀型別與 Mock 註解呈現路由、宣告式客戶端與服務端骨架。
- * 【概念】微服務通訊有多種協定與閘道模式；先建立概念再接真實基礎設施，學習曲線較平緩。
- * 【邊界】不負責真實服務發現、負載均衡、proto 產生或正式 Feign 依賴。
+ * <p>【技巧】用巢狀型別與 Mock 註解呈現路由、宣告式客戶端與服務端骨架。
+ * <p>【概念】微服務通訊有多種協定與閘道模式；先建立概念再接真實基礎設施，學習曲線較平緩。
+ * <p>【邊界】不負責真實服務發現、負載均衡、proto 產生或正式 Feign 依賴。
  */
 public class SpringCloudExamples {
 
@@ -75,7 +75,7 @@ public class SpringCloudExamples {
 
     /**
      * gRPC 服務端示意骨架（正式應繼承 proto 產生的 {@code *ImplBase}）。
-     * 僅示範請求進入點位置，不含序列化與串流生命週期。
+     * <br>僅示範請求進入點位置，不含序列化與串流生命週期。
      */
     public static class MyGrpcService { // 實際上應繼承 ***ImplBase
         /**

@@ -8,9 +8,9 @@ import java.util.List;
 
 /**
  * 【職責】以可執行方法示範 Java 核心面試題：ThreadLocal、集合效能與 JVM／執行緒概念說明。
- * 【技巧】結合 ThreadLocal 隔離非執行緒安全物件，並對照 ArrayList／LinkedList 隨機存取成本。
- * 【概念】面試範例強調「為什麼」與可觀測差異；正式系統應改用執行緒安全 API 或不可變設計。
- * 【邊界】不負責生產級並發工具選型或完整 GC 調校。
+ * <p>【技巧】結合 ThreadLocal 隔離非執行緒安全物件，並對照 ArrayList／LinkedList 隨機存取成本。
+ * <p>【概念】面試範例強調「為什麼」與可觀測差異；正式系統應改用執行緒安全 API 或不可變設計。
+ * <p>【邊界】不負責生產級並發工具選型或完整 GC 調校。
  */
 public class JavaCoreExamples {
 
@@ -45,7 +45,7 @@ public class JavaCoreExamples {
 
     /**
      * 對照 ArrayList（隨機存取約 O(1)）與 LinkedList（約 O(n)）在中段 get 的耗時差異，結果輸出至標準輸出。
-     * 僅供面試講解，非嚴謹基準測試。
+     * <br>僅供面試講解，非嚴謹基準測試。
      */
     public void compareListPerformance() {
         int items = 100000;

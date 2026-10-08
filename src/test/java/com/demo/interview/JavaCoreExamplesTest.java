@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 覆蓋 {@link JavaCoreExamples}（面試示範：Java 核心）。
- * 驗證 ThreadLocal 隔離性與 List 效能比較可執行。
+ * <br>驗證 ThreadLocal 隔離性與 List 效能比較可執行。
  */
 public class JavaCoreExamplesTest {
 
@@ -19,7 +19,7 @@ public class JavaCoreExamplesTest {
 
     /**
      * CASE-IV-JAVA-001：ThreadLocal 多執行緒隔離。
-     * Given: 10 執行緒並行；When: formatDate + getThreadNameFromContext；Then: 全部成功且結果獨立。
+     * <br>Given: 10 執行緒並行；When: formatDate + getThreadNameFromContext；Then: 全部成功且結果獨立。
      */
     @Test
     public void testThreadLocalIndependence() throws InterruptedException {
@@ -58,7 +58,7 @@ public class JavaCoreExamplesTest {
 
     /**
      * CASE-IV-JAVA-002：List 效能比較可執行。
-     * Given: 範例內建度量邏輯；When: compareListPerformance；Then: 不拋例外。
+     * <br>Given: 範例內建度量邏輯；When: compareListPerformance；Then: 不拋例外。
      */
     @Test
     public void testPerformanceComparison() {

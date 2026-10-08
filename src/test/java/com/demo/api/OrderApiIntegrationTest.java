@@ -15,8 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * 【職責】訂單 REST 契約整合測試：真實 {@link com.demo.service.OrderService} + H2。
- * 【技巧】MockMvc；測試設定 {@code spring.cache.type=simple}，避免本機 Redis。
- * 【概念】與 {@code OrderServiceTest}／{@code OrderControllerTest} 共用 CASE-ORDER-* Acceptance。
+ * <p>【技巧】MockMvc；測試設定 {@code spring.cache.type=simple}，避免本機 Redis。
+ * <p>【概念】與 {@code OrderServiceTest}／{@code OrderControllerTest} 共用 CASE-ORDER-* Acceptance。
  */
 @SpringBootTest(classes = SpringBootDemoApplication.class, properties = {
         "seata.enabled=false",
@@ -30,7 +30,7 @@ class OrderApiIntegrationTest {
 
     /**
      * CASE-ORDER-001：建立訂單後可列出。
-     * Given: 合法 JSON；When: POST /api/orders 再 GET /api/orders；Then: 200 + PENDING，列表為陣列。
+     * <br>Given: 合法 JSON；When: POST /api/orders 再 GET /api/orders；Then: 200 + PENDING，列表為陣列。
      */
     @Test
     void createAndListOrders_returnsPending() throws Exception {
@@ -53,7 +53,7 @@ class OrderApiIntegrationTest {
 
     /**
      * CASE-ORDER-002：查無訂單回 404。
-     * Given: 不存在的 id；When: GET /api/orders/999999；Then: 404。
+     * <br>Given: 不存在的 id；When: GET /api/orders/999999；Then: 404。
      */
     @Test
     void getMissingOrder_returns404() throws Exception {

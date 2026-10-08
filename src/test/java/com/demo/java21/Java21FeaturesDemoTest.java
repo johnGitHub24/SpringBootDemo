@@ -9,7 +9,7 @@ import com.demo.java21.Java21FeaturesDemo.Point;
 
 /**
  * 覆蓋 {@link Java21FeaturesDemo}（Java 21 語法示範層）的單元測試。
- * 驗證虛擬執行緒、Record Pattern、Switch Pattern Matching、Sequenced Collections。
+ * <br>驗證虛擬執行緒、Record Pattern、Switch Pattern Matching、Sequenced Collections。
  */
 public class Java21FeaturesDemoTest {
 
@@ -17,7 +17,7 @@ public class Java21FeaturesDemoTest {
 
     /**
      * CASE-J21-001：虛擬執行緒示範可完成。
-     * Given: 1000 個任務；When: virtualThreadsDemo；Then: 耗時大於 0。
+     * <br>Given: 1000 個任務；When: virtualThreadsDemo；Then: 耗時大於 0。
      */
     @Test
     void testVirtualThreads() {
@@ -28,7 +28,7 @@ public class Java21FeaturesDemoTest {
 
     /**
      * CASE-J21-002：Record Pattern 解構正確。
-     * Given: ColoredPoint(10,20,"紅色")；When: recordPatternsDemo；Then: 顏色與坐標字串正確，非匹配回「不匹配的格式」。
+     * <br>Given: ColoredPoint(10,20,"紅色")；When: recordPatternsDemo；Then: 顏色與坐標字串正確，非匹配回「不匹配的格式」。
      */
     @Test
     void testRecordPatterns() {
@@ -41,7 +41,7 @@ public class Java21FeaturesDemoTest {
 
     /**
      * CASE-J21-003：Switch Pattern Matching 分支正確。
-     * Given: 整數／字串／其他型別；When: switchPatternMatchingAdvancedDemo；Then: 各分支標籤正確，null 拋 NPE。
+     * <br>Given: 整數／字串／其他型別；When: switchPatternMatchingAdvancedDemo；Then: 各分支標籤正確，null 拋 NPE。
      */
     @Test
     void testSwitchPatternMatching() {
@@ -55,7 +55,7 @@ public class Java21FeaturesDemoTest {
 
     /**
      * CASE-J21-004：Sequenced Collections 頭尾操作正確。
-     * Given: 示範序列；When: sequencedCollectionsDemo；Then: 開頭／結尾元素位置符合預期。
+     * <br>Given: 示範序列；When: sequencedCollectionsDemo；Then: 開頭／結尾元素位置符合預期。
      */
     @Test
     void testSequencedCollections() {

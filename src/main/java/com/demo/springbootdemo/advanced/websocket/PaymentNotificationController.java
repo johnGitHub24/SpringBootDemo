@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 【職責】提供支付通知的 STOMP 與 REST 觸發入口。
- * 【技巧】結合 {@code @MessageMapping}/{@code @SendTo} 與 {@link SimpMessagingTemplate} 主動推播。
- * 【概念】WebSocket 適合伺服器主動通知；REST 觸發端點方便測試推播而不必先寫前端。
- * 【邊界】不負責支付業務規則、持久化或訂閱者身分驗證。
+ * <p>【技巧】結合 {@code @MessageMapping}/{@code @SendTo} 與 {@link SimpMessagingTemplate} 主動推播。
+ * <p>【概念】WebSocket 適合伺服器主動通知；REST 觸發端點方便測試推播而不必先寫前端。
+ * <p>【邊界】不負責支付業務規則、持久化或訂閱者身分驗證。
  */
 @Slf4j
 @Controller

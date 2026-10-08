@@ -24,7 +24,7 @@ import com.demo.springbootdemo.SpringBootDemoApplication;
 
 /**
  * 覆蓋 {@link OrderController}（Controller 層）的 MockMvc 整合測試。
- * Service 以 {@code @MockBean} 隔離，驗證 HTTP 路由、狀態碼與 JSON 回應。
+ * <br>Service 以 {@code @MockBean} 隔離，驗證 HTTP 路由、狀態碼與 JSON 回應。
  */
 @SpringBootTest(classes = SpringBootDemoApplication.class, properties = "seata.enabled=false")
 @AutoConfigureMockMvc
@@ -41,7 +41,7 @@ public class OrderControllerTest {
 
     /**
      * CASE-ORDER-001：建立訂單後可列出。
-     * Given: 合法 OrderRequest + Mock Service；When: POST /api/orders 再 GET /api/orders；Then: 200 + PENDING，列表為陣列。
+     * <br>Given: 合法 OrderRequest + Mock Service；When: POST /api/orders 再 GET /api/orders；Then: 200 + PENDING，列表為陣列。
      */
     @Test
     public void testCreateAndGetOrder() throws Exception {
@@ -76,7 +76,7 @@ public class OrderControllerTest {
 
     /**
      * CASE-ORDER-002：查無訂單回 404。
-     * Given: Service 回 empty；When: GET /api/orders/999；Then: 404。
+     * <br>Given: Service 回 empty；When: GET /api/orders/999；Then: 404。
      */
     @Test
     public void testGetOrderNotFound() throws Exception {

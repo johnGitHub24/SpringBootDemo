@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * 【職責】Library REST 契約整合測試：真實 {@link com.demo.springbootdemo.library.service.BookService} + H2。
- * 【技巧】先 POST 建書再打 GET／borrow；錯誤路徑走全域 {@code BookNotFoundException} → 404。
- * 【概念】與 {@code BookControllerTest}／{@code BookServiceTest} 共用 CASE-BOOK-* Acceptance。
+ * <p>【技巧】先 POST 建書再打 GET／borrow；錯誤路徑走全域 {@code BookNotFoundException} → 404。
+ * <p>【概念】與 {@code BookControllerTest}／{@code BookServiceTest} 共用 CASE-BOOK-* Acceptance。
  */
 @SpringBootTest(classes = SpringBootDemoApplication.class, properties = {
         "seata.enabled=false",
@@ -36,7 +36,7 @@ class BookApiIntegrationTest {
 
     /**
      * CASE-BOOK-CTL-001：取得書籍成功。
-     * Given: 已建立圖書；When: GET /library/books/{id}；Then: 200 + title/id 正確。
+     * <br>Given: 已建立圖書；When: GET /library/books/{id}；Then: 200 + title/id 正確。
      */
     @Test
     void getBook_success() throws Exception {
@@ -50,7 +50,7 @@ class BookApiIntegrationTest {
 
     /**
      * CASE-BOOK-CTL-002：書籍不存在回 404。
-     * Given: 無此 id；When: GET /library/books/999999；Then: 404 + 錯誤訊息。
+     * <br>Given: 無此 id；When: GET /library/books/999999；Then: 404 + 錯誤訊息。
      */
     @Test
     void getBook_notFound() throws Exception {
@@ -62,7 +62,7 @@ class BookApiIntegrationTest {
 
     /**
      * CASE-BOOK-SVC-001：借書成功。
-     * Given: 未借出圖書；When: POST /library/books/{id}/borrow；Then: 200、isBorrowed=true。
+     * <br>Given: 未借出圖書；When: POST /library/books/{id}/borrow；Then: 200、isBorrowed=true。
      */
     @Test
     void borrowBook_success() throws Exception {
@@ -76,7 +76,7 @@ class BookApiIntegrationTest {
 
     /**
      * CASE-BOOK-SVC-002：借書失敗（已借出）。
-     * Given: 已借出圖書；When: 再次 borrow；Then: 404（示範例外語意）。
+     * <br>Given: 已借出圖書；When: 再次 borrow；Then: 404（示範例外語意）。
      */
     @Test
     void borrowBook_alreadyBorrowed() throws Exception {

@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 覆蓋 {@link KafkaProducerService}（Kafka 生產者／訊息層）的整合測試。
- * 使用 EmbeddedKafka 驗證訊息可送達；內部 {@code @KafkaListener} 僅供測試收取。
+ * <br>使用 EmbeddedKafka 驗證訊息可送達；內部 {@code @KafkaListener} 僅供測試收取。
  */
 @SpringBootTest(properties = {
     "seata.enabled=false"
@@ -33,7 +33,7 @@ public class KafkaProducerServiceTest {
 
     /**
      * CASE-KAFKA-PROD-001：發送後可被監聽器收到。
-     * Given: EmbeddedKafka topic=test-topic；When: sendMessage；Then: 10 秒內收到相同內容。
+     * <br>Given: EmbeddedKafka topic=test-topic；When: sendMessage；Then: 10 秒內收到相同內容。
      */
     @Test
     public void testSendMessage() throws InterruptedException {

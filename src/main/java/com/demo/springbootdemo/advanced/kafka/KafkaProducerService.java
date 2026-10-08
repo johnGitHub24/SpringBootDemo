@@ -9,9 +9,9 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * 【職責】以 {@link KafkaTemplate} 非同步發送業務事件至指定 Topic。
- * 【技巧】以 key 決定分區以利同 key 保序，並以 {@link CompletableFuture} 回調記錄成功／失敗。
- * 【概念】Producer 與主流程解耦可削峰；正式環境需補重試、事務訊息或死信策略。
- * 【邊界】不負責消費者處理。
+ * <p>【技巧】以 key 決定分區以利同 key 保序，並以 {@link CompletableFuture} 回調記錄成功／失敗。
+ * <p>【概念】Producer 與主流程解耦可削峰；正式環境需補重試、事務訊息或死信策略。
+ * <p>【邊界】不負責消費者處理。
  */
 @Slf4j
 @Service

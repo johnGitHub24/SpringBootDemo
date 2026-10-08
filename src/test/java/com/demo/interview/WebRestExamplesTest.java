@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 覆蓋 {@link WebRestExamples}（面試示範：REST PUT／PATCH 語意）。
- * 驗證全體替換與部分更新的行為差異。
+ * <br>驗證全體替換與部分更新的行為差異。
  */
 public class WebRestExamplesTest {
 
@@ -16,7 +16,7 @@ public class WebRestExamplesTest {
 
     /**
      * CASE-IV-WEB-001：PUT 全體替換、PATCH 部分更新。
-     * Given: 預設使用者；When: putUpdate 再 patchUpdate(name)；Then: PUT 全欄位更新，PATCH 保留未改 Email。
+     * <br>Given: 預設使用者；When: putUpdate 再 patchUpdate(name)；Then: PUT 全欄位更新，PATCH 保留未改 Email。
      */
     @Test
     public void testPutVSPatchEffect() {

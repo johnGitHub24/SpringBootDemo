@@ -2,9 +2,9 @@ package com.demo.interview;
 
 /**
  * 【職責】對照 Kafka／RabbitMQ 差異，並提供 Topic 路由鍵比對的可執行示範。
- * 【技巧】以註解說明 Broker 模型差異，輔以字串比對模擬路由規則。
- * 【概念】訊息系統選型取決於吞吐、延遲與路由需求；範例只建立心智模型，不連真實 Broker。
- * 【邊界】不負責真實連線、ACK／Offset 管理或生產級路由引擎。
+ * <p>【技巧】以註解說明 Broker 模型差異，輔以字串比對模擬路由規則。
+ * <p>【概念】訊息系統選型取決於吞吐、延遲與路由需求；範例只建立心智模型，不連真實 Broker。
+ * <p>【邊界】不負責真實連線、ACK／Offset 管理或生產級路由引擎。
  */
 public class MessagingExamples {
 
@@ -37,7 +37,7 @@ public class MessagingExamples {
 
     /**
      * 模擬 RabbitMQ Topic Exchange 的路由鍵與綁定模式比對，用於面試講解通配符語意。
-     * 邊界：僅涵蓋常見 {@code *}／{@code #} 轉正則與「{@code .#} 結尾匹配父層」特例，非完整 AMQP 實作。
+     * <br>邊界：僅涵蓋常見 {@code *}／{@code #} 轉正則與「{@code .#} 結尾匹配父層」特例，非完整 AMQP 實作。
      *
      * @param routingKey      訊息上的路由鍵（以 {@code .} 分段）
      * @param bindingPattern  佇列綁定模式（可含 {@code *}、{@code #}）

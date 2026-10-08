@@ -13,8 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * 【職責】驗證 springdoc 端點 {@code /v3/api-docs} 可用且 metadata 正確。
- * 【技巧】{@code @SpringBootTest} + MockMvc；測試資源關閉 seata／改 simple cache。
- * 【概念】與 {@code OpenApiConfigTest} 共用 CASE-OPENAPI-001：單元查 Bean 標題，整合查 HTTP 契約。
+ * <p>【技巧】{@code @SpringBootTest} + MockMvc；測試資源關閉 seata／改 simple cache。
+ * <p>【概念】與 {@code OpenApiConfigTest} 共用 CASE-OPENAPI-001：單元查 Bean 標題，整合查 HTTP 契約。
  */
 @SpringBootTest(classes = SpringBootDemoApplication.class, properties = {
         "seata.enabled=false",
@@ -28,7 +28,7 @@ class OpenApiDocsIntegrationTest {
 
     /**
      * CASE-OPENAPI-001：GET /v3/api-docs 回 200 且 title 正確。
-     * Given: 應用啟動；When: GET /v3/api-docs；Then: 200 + openapi 欄位 + title=SpringBootDemo API。
+     * <br>Given: 應用啟動；When: GET /v3/api-docs；Then: 200 + openapi 欄位 + title=SpringBootDemo API。
      */
     @Test
     void apiDocs_returnsOpenApiJson() throws Exception {

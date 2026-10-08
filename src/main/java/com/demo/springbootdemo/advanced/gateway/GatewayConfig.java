@@ -14,9 +14,9 @@ import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunction
 
 /**
  * 【職責】設定 Spring Cloud Gateway MVC 路由，將對外閘道路徑轉發至後端模擬微服務。
- * 【技巧】以 Gateway MVC 的 route／path／filter DSL 組裝 {@link RouterFunction}，並記錄請求軌跡。
- * 【概念】閘道集中路由與橫切過濾，可讓後端服務不必各自處理對外路徑轉換。
- * 【邊界】不負責業務規則、認證授權、限流與熔斷；後端位址綁定 {@code gateway.backend-base-url}。
+ * <p>【技巧】以 Gateway MVC 的 route／path／filter DSL 組裝 {@link RouterFunction}，並記錄請求軌跡。
+ * <p>【概念】閘道集中路由與橫切過濾，可讓後端服務不必各自處理對外路徑轉換。
+ * <p>【邊界】不負責業務規則、認證授權、限流與熔斷；後端位址綁定 {@code gateway.backend-base-url}。
  */
 @Slf4j
 @Configuration
@@ -39,8 +39,8 @@ public class GatewayConfig {
 
     /**
      * 【職責】註冊用戶服務閘道路由：{@code /get-users/{segment}} → {@code /api/ms/users/{segment}}。
-     * 【技巧】以 Gateway MVC route／path／setPath 與日誌 filter 組裝 {@link RouterFunction}。
-     * 【概念】閘道改寫對外路徑，後端仍可用內部 API 前綴，降低前後端路徑耦合。
+     * <p>【技巧】以 Gateway MVC route／path／setPath 與日誌 filter 組裝 {@link RouterFunction}。
+     * <p>【概念】閘道改寫對外路徑，後端仍可用內部 API 前綴，降低前後端路徑耦合。
      */
     @Bean
     public RouterFunction<ServerResponse> userServiceRoute() {
@@ -56,8 +56,8 @@ public class GatewayConfig {
 
     /**
      * 【職責】註冊訂單服務閘道路由：{@code /get-orders/{segment}} → {@code /api/ms/orders/{segment}}。
-     * 【技巧】與用戶路由相同的 DSL 模式，僅路徑與後端前綴不同。
-     * 【概念】多條路由共用同一後端基底 URL，可在單機模擬多微服務轉發。
+     * <p>【技巧】與用戶路由相同的 DSL 模式，僅路徑與後端前綴不同。
+     * <p>【概念】多條路由共用同一後端基底 URL，可在單機模擬多微服務轉發。
      */
     @Bean
     public RouterFunction<ServerResponse> orderServiceRoute() {

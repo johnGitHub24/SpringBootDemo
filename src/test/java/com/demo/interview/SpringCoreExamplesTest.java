@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 覆蓋 {@link SpringCoreExamples}（面試示範：Spring 核心／設計模式）。
- * 驗證 Proxy 前後置處理與 IOC 注入切換行為。
+ * <br>驗證 Proxy 前後置處理與 IOC 注入切換行為。
  */
 public class SpringCoreExamplesTest {
 
     /**
      * CASE-IV-CORE-001：Proxy 前後置處理正確。
-     * Given: RealSubject + ProxySubject；When: request；Then: 結果含前置／業務／後置字串。
+     * <br>Given: RealSubject + ProxySubject；When: request；Then: 結果含前置／業務／後置字串。
      */
     @Test
     public void testProxyPattern() {
@@ -30,7 +30,7 @@ public class SpringCoreExamplesTest {
 
     /**
      * CASE-IV-CORE-002：IOC 注入切換 Email／SMS。
-     * Given: EmailService／SmsService；When: NotificationProcessor.process；Then: 訊息字串依注入實作變化。
+     * <br>Given: EmailService／SmsService；When: NotificationProcessor.process；Then: 訊息字串依注入實作變化。
      */
     @Test
     public void testNotificationProcessorLogic() {

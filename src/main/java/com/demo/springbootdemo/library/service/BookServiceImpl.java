@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 【職責】實作圖書 CRUD 與借還規則，並將實體轉為 {@link BookDto}。
- * 【技巧】透過 {@link BookRepository} 與 {@code @Transactional} 管理寫入一致性，並以 SLF4J 記錄關鍵操作。
- * 【概念】服務層是業務規則的唯一入口；Controller／gRPC 只轉接，避免多入口出現不同借還邏輯。
- * 【邊界】不組裝 HTTP 回應、不直接寫 SQL。
+ * <p>【技巧】透過 {@link BookRepository} 與 {@code @Transactional} 管理寫入一致性，並以 SLF4J 記錄關鍵操作。
+ * <p>【概念】服務層是業務規則的唯一入口；Controller／gRPC 只轉接，避免多入口出現不同借還邏輯。
+ * <p>【邊界】不組裝 HTTP 回應、不直接寫 SQL。
  */
 @Service
 public class BookServiceImpl implements BookService {

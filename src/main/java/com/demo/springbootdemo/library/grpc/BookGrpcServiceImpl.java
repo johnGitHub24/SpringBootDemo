@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 【職責】將 Protobuf 圖書請求轉交 {@link BookService}，並以 gRPC 串流回傳。
- * 【技巧】繼承產生的 {@link BookServiceGrpc.BookServiceImplBase}，以 {@link StreamObserver} 寫回回應。
- * 【概念】gRPC 與 REST 可共用同一 Service；協定差異留在適配層，商業規則不必複製。
- * 【邊界】目前 {@code @GrpcService} 為註解狀態，預設未掛載；不取代 Service 內規則。
+ * <p>【技巧】繼承產生的 {@link BookServiceGrpc.BookServiceImplBase}，以 {@link StreamObserver} 寫回回應。
+ * <p>【概念】gRPC 與 REST 可共用同一 Service；協定差異留在適配層，商業規則不必複製。
+ * <p>【邊界】目前 {@code @GrpcService} 為註解狀態，預設未掛載；不取代 Service 內規則。
  */
 // @GrpcService
 public class BookGrpcServiceImpl extends BookServiceGrpc.BookServiceImplBase {
@@ -27,7 +27,7 @@ public class BookGrpcServiceImpl extends BookServiceGrpc.BookServiceImplBase {
 
     /**
      * 依請求中的圖書 ID 查詢並透過 {@link StreamObserver} 回傳 Protobuf 回應。
-     * 查詢失敗時以 gRPC {@code NOT_FOUND} 結束串流，不向上拋出未處理例外。
+     * <br>查詢失敗時以 gRPC {@code NOT_FOUND} 結束串流，不向上拋出未處理例外。
      *
      * @param request          含圖書 ID 的 Protobuf 請求
      * @param responseObserver 單次回應與完成／錯誤回呼

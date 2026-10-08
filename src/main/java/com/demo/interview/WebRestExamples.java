@@ -11,9 +11,9 @@ import java.util.Map;
 
 /**
  * 【職責】以記憶體 Map 示範 PUT／PATCH 語意與冪等性差異的 REST 面試範例。
- * 【技巧】薄 {@code @RestController} 對照全量替換與部分更新的 HTTP 行為。
- * 【概念】PUT 通常表示完整替換且冪等；PATCH 表示部分更新。先用記憶體模型理解語意再接資料庫。
- * 【邊界】不負責持久化、驗證或真實用戶領域規則。
+ * <p>【技巧】薄 {@code @RestController} 對照全量替換與部分更新的 HTTP 行為。
+ * <p>【概念】PUT 通常表示完整替換且冪等；PATCH 表示部分更新。先用記憶體模型理解語意再接資料庫。
+ * <p>【邊界】不負責持久化、驗證或真實用戶領域規則。
  */
 @RestController
 @RequestMapping("/api/examples")

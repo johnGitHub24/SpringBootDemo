@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 覆蓋 {@link BookServiceImpl}（Service 層）的單元測試。
- * 以 Mockito 隔離 {@link BookRepository}，驗證借書商業邏輯，不依賴真實資料庫。
+ * <br>以 Mockito 隔離 {@link BookRepository}，驗證借書商業邏輯，不依賴真實資料庫。
  */
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -31,7 +31,7 @@ public class BookServiceTest {
 
     /**
      * CASE-BOOK-SVC-001：借書成功。
-     * Given: 未借出書籍；When: borrowBook；Then: isBorrowed=true、borrowerName 正確，且 save 被呼叫一次。
+     * <br>Given: 未借出書籍；When: borrowBook；Then: isBorrowed=true、borrowerName 正確，且 save 被呼叫一次。
      */
     @Test
     @DisplayName("測試借書功能：成功路徑")
@@ -61,7 +61,7 @@ public class BookServiceTest {
 
     /**
      * CASE-BOOK-SVC-002：借書失敗（已借出）。
-     * Given: 書籍已借出；When: borrowBook；Then: 拋出 BookNotFoundException。
+     * <br>Given: 書籍已借出；When: borrowBook；Then: 拋出 BookNotFoundException。
      */
     @Test
     @DisplayName("測試借書功能：失敗路徑 (已被借出)")

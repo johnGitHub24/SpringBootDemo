@@ -17,9 +17,9 @@ import java.util.Map;
 
 /**
  * 【職責】以 JDBC 實作圖書表的查詢與寫入。
- * 【技巧】透過 {@link NamedParameterJdbcTemplate} 與具名參數操作 {@code book} 表，避免字串拼接。
- * 【概念】手寫 SQL 可精確控制語句；相較 JPA 更接近資料庫，但缺少自動映射與分頁便利。
- * 【邊界】不含商業規則；參數皆具名綁定以防 SQL Injection。
+ * <p>【技巧】透過 {@link NamedParameterJdbcTemplate} 與具名參數操作 {@code book} 表，避免字串拼接。
+ * <p>【概念】手寫 SQL 可精確控制語句；相較 JPA 更接近資料庫，但缺少自動映射與分頁便利。
+ * <p>【邊界】不含商業規則；參數皆具名綁定以防 SQL Injection。
  */
 @Repository
 public class BookDaoImpl implements BookDao {

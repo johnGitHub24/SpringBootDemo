@@ -10,9 +10,9 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * 【職責】示範事務傳播、分散式鎖骨架與資料庫鎖／隔離等級概念。
- * 【技巧】以 {@code @Transactional} 傳播設定與鎖使用骨架對照悲觀／樂觀鎖說明。
- * 【概念】一致性問題常同時涉及交易邊界與鎖策略；範例把關鍵旋鈕集中展示以便面試對照。
- * 【邊界】不負責真實資料存取、鎖註冊表整合或死鎖重試框架。
+ * <p>【技巧】以 {@code @Transactional} 傳播設定與鎖使用骨架對照悲觀／樂觀鎖說明。
+ * <p>【概念】一致性問題常同時涉及交易邊界與鎖策略；範例把關鍵旋鈕集中展示以便面試對照。
+ * <p>【邊界】不負責真實資料存取、鎖註冊表整合或死鎖重試框架。
  */
 public class PersistenceExamples {
 
@@ -29,7 +29,7 @@ public class PersistenceExamples {
 
     /**
      * 事務傳播屬性示範服務：對照 REQUIRED 與 REQUIRES_NEW 的宣告方式。
-     * 方法本體刻意留空，重點在註解語意而非業務。
+     * <br>方法本體刻意留空，重點在註解語意而非業務。
      */
     @Service
     public static class TransactionService {
@@ -55,7 +55,7 @@ public class PersistenceExamples {
 
     /**
      * Redis 分散式鎖使用骨架：以 {@link Lock#tryLock} 限時搶鎖，並在 finally 釋放。
-     * 實際鎖實例通常來自 RedisLockRegistry；此處僅示範正確的取得／釋放邊界。
+     * <br>實際鎖實例通常來自 RedisLockRegistry；此處僅示範正確的取得／釋放邊界。
      */
     public static class RedisLockExample {
         /**

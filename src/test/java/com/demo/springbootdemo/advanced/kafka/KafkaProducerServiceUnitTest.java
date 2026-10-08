@@ -17,8 +17,8 @@ import static org.mockito.Mockito.verify;
 
 /**
  * 【職責】單元驗證 {@link KafkaProducerService#sendMessage} 會委派 {@link KafkaTemplate}。
- * 【技巧】Mock template 回未完成的 Future，避免 {@code whenComplete} 碰 null metadata。
- * 【概念】與 {@code KafkaBrokerIntegrationTest} 共用 CASE-KAFKA-INT-001。
+ * <p>【技巧】Mock template 回未完成的 Future，避免 {@code whenComplete} 碰 null metadata。
+ * <p>【概念】與 {@code KafkaBrokerIntegrationTest} 共用 CASE-KAFKA-INT-001。
  */
 @ExtendWith(MockitoExtension.class)
 class KafkaProducerServiceUnitTest {
@@ -31,7 +31,7 @@ class KafkaProducerServiceUnitTest {
 
     /**
      * CASE-KAFKA-INT-001：發送 payment-topic 訊息不拋錯。
-     * Given: Mock KafkaTemplate；When: sendMessage；Then: 不拋例外且 send 被呼叫。
+     * <br>Given: Mock KafkaTemplate；When: sendMessage；Then: 不拋例外且 send 被呼叫。
      */
     @Test
     void sendMessage_doesNotThrow() {

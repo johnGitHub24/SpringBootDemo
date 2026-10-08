@@ -7,30 +7,30 @@ import java.util.stream.IntStream;
 
 /**
  * 【職責】以可呼叫方法展示 Java 21 虛擬執行緒、Record Patterns、switch 模式比對與 Sequenced Collections。
- * 【技巧】結合 {@code Executors.newVirtualThreadPerTaskExecutor}、record 解構與新集合 API。
- * 【概念】語言新特性應用於真實場景前，先用獨立示範驗證行為與成本差異，學習曲線較可控。
- * 【邊界】不負責生產業務邏輯；僅供學習與單元驗證。
+ * <p>【技巧】結合 {@code Executors.newVirtualThreadPerTaskExecutor}、record 解構與新集合 API。
+ * <p>【概念】語言新特性應用於真實場景前，先用獨立示範驗證行為與成本差異，學習曲線較可控。
+ * <p>【邊界】不負責生產業務邏輯；僅供學習與單元驗證。
  */
 public class Java21FeaturesDemo {
 
     /**
      * 【職責】提供二維座標 Record，供 Record Patterns 解構示範與測試共用。
-     * 【技巧】頂層巢狀 record，避免方法內 local record 造成 instanceof 型別不一致。
-     * 【概念】Record 是不可變資料載體；適合當模式比對的目標型別。
+     * <p>【技巧】頂層巢狀 record，避免方法內 local record 造成 instanceof 型別不一致。
+     * <p>【概念】Record 是不可變資料載體；適合當模式比對的目標型別。
      */
     public record Point(int x, int y) {}
 
     /**
      * 【職責】提供帶顏色的座標 Record，用於巢狀 Record Patterns。
-     * 【技巧】組合 {@link Point} 與顏色字串。
-     * 【概念】巢狀 record 可一次解構多層欄位，減少手動 getter 鏈。
+     * <p>【技巧】組合 {@link Point} 與顏色字串。
+     * <p>【概念】巢狀 record 可一次解構多層欄位，減少手動 getter 鏈。
      */
     public record ColoredPoint(Point p, String color) {}
 
     /**
      * 【職責】以虛擬執行緒池並行執行大量短延遲任務，回傳總耗時。
-     * 【技巧】{@code try-with-resources} 關閉 {@code newVirtualThreadPerTaskExecutor}。
-     * 【概念】虛擬執行緒降低阻塞 I/O 的執行緒成本；適合高併發等待，而非 CPU 密集計算。
+     * <p>【技巧】{@code try-with-resources} 關閉 {@code newVirtualThreadPerTaskExecutor}。
+     * <p>【概念】虛擬執行緒降低阻塞 I/O 的執行緒成本；適合高併發等待，而非 CPU 密集計算。
      */
     public long virtualThreadsDemo(int taskCount) {
         long startTime = System.currentTimeMillis();

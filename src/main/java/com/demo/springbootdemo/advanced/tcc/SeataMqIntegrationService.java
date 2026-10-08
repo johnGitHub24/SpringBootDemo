@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 /**
  * 【職責】示範 Seata 全域事務與 Kafka 通知的協作流程。
- * 【技巧】在 {@code @GlobalTransactional} 內執行 TCC Try，成功路徑再發送軌跡訊息。
- * 【概念】分散式事務與訊息發送的時序會影響一致性；實務常把 MQ 放 Confirm 後或改用事務訊息。
- * 【邊界】不實作 Confirm／Cancel 本體（由 Seata 調度 {@link TccAction}）。
+ * <p>【技巧】在 {@code @GlobalTransactional} 內執行 TCC Try，成功路徑再發送軌跡訊息。
+ * <p>【概念】分散式事務與訊息發送的時序會影響一致性；實務常把 MQ 放 Confirm 後或改用事務訊息。
+ * <p>【邊界】不實作 Confirm／Cancel 本體（由 Seata 調度 {@link TccAction}）。
  */
 @Slf4j
 @Service

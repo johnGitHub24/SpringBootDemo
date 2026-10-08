@@ -13,8 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * 【職責】Gateway MVC 路由轉發的 HTTP 整合測試（同進程模擬微服務）。
- * 【技巧】DEFINED_PORT + {@code gateway.backend-base-url} 指向本機，讓 http() filter 真的轉發。
- * 【概念】與 {@code GatewayConfigTest} 共用 CASE-GW-*：單元對照路徑常數，整合驗證實際轉發。
+ * <p>【技巧】DEFINED_PORT + {@code gateway.backend-base-url} 指向本機，讓 http() filter 真的轉發。
+ * <p>【概念】與 {@code GatewayConfigTest} 共用 CASE-GW-*：單元對照路徑常數，整合驗證實際轉發。
  */
 @SpringBootTest(
         classes = SpringBootDemoApplication.class,
@@ -33,7 +33,7 @@ class GatewayApiIntegrationTest {
 
     /**
      * CASE-GW-001：使用者路由轉發成功。
-     * Given: Gateway 指向本機模擬 User 服務；When: GET /get-users/123；Then: 200 + id/source 正確。
+     * <br>Given: Gateway 指向本機模擬 User 服務；When: GET /get-users/123；Then: 200 + id/source 正確。
      */
     @Test
     void userRouteForwarding() throws Exception {
@@ -45,7 +45,7 @@ class GatewayApiIntegrationTest {
 
     /**
      * CASE-GW-002：訂單路由轉發成功。
-     * Given: Gateway 指向本機模擬 Order 服務；When: GET /get-orders/999；Then: 200 + orderId/status 正確。
+     * <br>Given: Gateway 指向本機模擬 Order 服務；When: GET /get-orders/999；Then: 200 + orderId/status 正確。
      */
     @Test
     void orderRouteForwarding() throws Exception {

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 覆蓋 {@link TccAction}（Seata TCC 動作層）的 SpringBoot 整合測試。
- * 驗證 Try／Confirm 階段可成功執行（不涵蓋 Cancel）。
+ * <br>驗證 Try／Confirm 階段可成功執行（不涵蓋 Cancel）。
  */
 @SpringBootTest
 public class TccActionTest {
@@ -22,7 +22,7 @@ public class TccActionTest {
 
     /**
      * CASE-TCC-001：Try → Confirm 工作流成功。
-     * Given: orderId=ORDER_X、amount=100；When: prepare 再 confirm；Then: 兩階段皆回 true。
+     * <br>Given: orderId=ORDER_X、amount=100；When: prepare 再 confirm；Then: 兩階段皆回 true。
      */
     @Test
     public void testTccWorkflow() {

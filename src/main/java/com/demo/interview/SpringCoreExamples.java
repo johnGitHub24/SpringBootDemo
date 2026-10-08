@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 /**
  * 【職責】以可編譯巢狀型別示範 IoC／DI／AOP 與代理模式面試概念。
- * 【技巧】展示多實作注入、{@code @Qualifier} 消歧與靜態代理擴充。
- * 【概念】控制反轉把依賴建立交給容器；代理則在不改業務碼的前提下插入橫切行為。
- * 【邊界】不負責真實 AOP 切面組態或動態代理產生。
+ * <p>【技巧】展示多實作注入、{@code @Qualifier} 消歧與靜態代理擴充。
+ * <p>【概念】控制反轉把依賴建立交給容器；代理則在不改業務碼的前提下插入橫切行為。
+ * <p>【邊界】不負責真實 AOP 切面組態或動態代理產生。
  */
 public class SpringCoreExamples {
 
@@ -54,7 +54,7 @@ public class SpringCoreExamples {
 
     /**
      * 示範多 {@link MessageService} 實作時以 {@code @Qualifier} 明確注入，避免 NoUniqueBeanDefinition。
-     * 採建構子注入以表達必要依賴並利於測試與不變性。
+     * <br>採建構子注入以表達必要依賴並利於測試與不變性。
      */
     @Service
     public static class NotificationProcessor {
@@ -120,7 +120,7 @@ public class SpringCoreExamples {
 
     /**
      * 靜態代理：與真實主體共用介面，在前後插入權限檢查與日誌等橫切邏輯。
-     * 優點是不改原始類即可擴充；缺點是介面方法多時代理需逐一實作（Spring AOP 可緩解）。
+     * <br>優點是不改原始類即可擴充；缺點是介面方法多時代理需逐一實作（Spring AOP 可緩解）。
      */
     public static class ProxySubject implements Subject {
         private final RealSubject realSubject;

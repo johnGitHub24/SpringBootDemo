@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 /**
  * 【職責】以教學用實作模擬支付場景的 TCC 資產凍結、扣款與釋放。
- * 【技巧】實作 {@link TccAction} 三階段，僅記錄日誌軌跡以展示語意。
- * 【概念】Try 預留、Confirm 提交、Cancel 釋放；先理解階段責任再接真實帳務寫入。
- * 【邊界】不寫入真實帳務資料庫。
+ * <p>【技巧】實作 {@link TccAction} 三階段，僅記錄日誌軌跡以展示語意。
+ * <p>【概念】Try 預留、Confirm 提交、Cancel 釋放；先理解階段責任再接真實帳務寫入。
+ * <p>【邊界】不寫入真實帳務資料庫。
  */
 @Slf4j
 @Service

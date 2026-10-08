@@ -21,8 +21,8 @@ import static org.mockito.Mockito.verify;
 
 /**
  * 【職責】覆蓋 {@link OrderService} 公開行為的單元測試（Mock Repository／Producer）。
- * 【技巧】{@code MockitoExtension} 隔離 JPA 與 Kafka，只斷言建立狀態與查無資料契約。
- * 【概念】公開 Service ≥1 單元測；與 {@code com.demo.api.OrderApiIntegrationTest} 共用 Case ID。
+ * <p>【技巧】{@code MockitoExtension} 隔離 JPA 與 Kafka，只斷言建立狀態與查無資料契約。
+ * <p>【概念】公開 Service ≥1 單元測；與 {@code com.demo.api.OrderApiIntegrationTest} 共用 Case ID。
  */
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -38,7 +38,7 @@ class OrderServiceTest {
 
     /**
      * CASE-ORDER-001：建立訂單後為 PENDING 並嘗試發事件。
-     * Given: 合法 OrderRequest；When: createOrder；Then: status=PENDING、save／sendOrderEvent 各一次。
+     * <br>Given: 合法 OrderRequest；When: createOrder；Then: status=PENDING、save／sendOrderEvent 各一次。
      */
     @Test
     void createOrder_persistsPendingAndPublishes() {
@@ -65,7 +65,7 @@ class OrderServiceTest {
 
     /**
      * CASE-ORDER-002：查無訂單回 empty（對應 HTTP 404）。
-     * Given: Repository 無此 id；When: getOrderById(999)；Then: Optional.empty。
+     * <br>Given: Repository 無此 id；When: getOrderById(999)；Then: Optional.empty。
      */
     @Test
     void getOrderById_missing_returnsEmpty() {

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 覆蓋 {@link KafkaProducerService} 在高併發下的發送穩定性（訊息層壓力測試）。
- * 以多執行緒並行 sendMessage，驗證 30 秒內全部完成。
+ * <br>以多執行緒並行 sendMessage，驗證 30 秒內全部完成。
  */
 @SpringBootTest
 @DirtiesContext
@@ -27,7 +27,7 @@ public class KafkaHighConcurrencyTest {
 
     /**
      * CASE-KAFKA-HC-001：50 執行緒 × 100 訊息全部送出。
-     * Given: EmbeddedKafka 3 partitions；When: 並行 sendMessage 共 5000 則；Then: latch 於 30 秒內歸零。
+     * <br>Given: EmbeddedKafka 3 partitions；When: 並行 sendMessage 共 5000 則；Then: latch 於 30 秒內歸零。
      */
     @Test
     public void testHighConcurrencySend() throws InterruptedException {

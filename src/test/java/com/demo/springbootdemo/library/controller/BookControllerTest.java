@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * 覆蓋 {@link BookController}（Controller 層）的 MockMvc 整合測試。
- * Service 以 {@code @MockBean} 隔離，驗證 HTTP 狀態碼與 JSON 錯誤回應。
+ * <br>Service 以 {@code @MockBean} 隔離，驗證 HTTP 狀態碼與 JSON 錯誤回應。
  */
 @SpringBootTest(properties = "seata.enabled=false")
 @AutoConfigureMockMvc // 自動配置 MockMvc
@@ -33,7 +33,7 @@ public class BookControllerTest {
 
     /**
      * CASE-BOOK-CTL-001：取得書籍成功。
-     * Given: Service 回傳 BookDto；When: GET /library/books/1；Then: 200 + title/id 正確。
+     * <br>Given: Service 回傳 BookDto；When: GET /library/books/1；Then: 200 + title/id 正確。
      */
     @Test
     @DisplayName("測試獲取書籍 API：成功")
@@ -56,7 +56,7 @@ public class BookControllerTest {
 
     /**
      * CASE-BOOK-CTL-002：書籍不存在回 404。
-     * Given: Service 拋出 BookNotFoundException；When: GET /library/books/999；Then: 404 + 錯誤訊息。
+     * <br>Given: Service 拋出 BookNotFoundException；When: GET /library/books/999；Then: 404 + 錯誤訊息。
      */
     @Test
     @DisplayName("測試獲取書籍 API：找不到書籍 (404)")

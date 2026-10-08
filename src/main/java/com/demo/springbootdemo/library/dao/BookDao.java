@@ -6,9 +6,9 @@ import java.util.List;
 
 /**
  * 【職責】定義圖書 JDBC 持久化存取契約。
- * 【技巧】以介面描述查詢／寫入操作，實作可用 NamedParameterJdbcTemplate。
- * 【概念】DAO 與 Repository 都是資料存取抽象；本介面示範手寫 JDBC 路徑，現行主流程多走 {@link BookRepository}。
- * 【邊界】不含商業規則（借還可否由 Service 決定）。
+ * <p>【技巧】以介面描述查詢／寫入操作，實作可用 NamedParameterJdbcTemplate。
+ * <p>【概念】DAO 與 Repository 都是資料存取抽象；本介面示範手寫 JDBC 路徑，現行主流程多走 {@link BookRepository}。
+ * <p>【邊界】不含商業規則（借還可否由 Service 決定）。
  */
 public interface BookDao {
 

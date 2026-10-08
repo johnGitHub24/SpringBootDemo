@@ -7,9 +7,9 @@ import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
 
 /**
  * 【職責】定義 TCC（Try-Confirm-Cancel）資源動作契約，供 Seata 在全域事務中調度。
- * 【技巧】以 {@code @LocalTCC}／{@code @TwoPhaseBusinessAction} 宣告兩階段回呼與上下文參數。
- * 【概念】TCC 用「先預留、再確認或取消」達成跨服務最終一致，比單庫本地交易更適合分散式協調。
- * 【邊界】不負責開啟全域事務或 MQ 通知；持久化細節由實作類處理。
+ * <p>【技巧】以 {@code @LocalTCC}／{@code @TwoPhaseBusinessAction} 宣告兩階段回呼與上下文參數。
+ * <p>【概念】TCC 用「先預留、再確認或取消」達成跨服務最終一致，比單庫本地交易更適合分散式協調。
+ * <p>【邊界】不負責開啟全域事務或 MQ 通知；持久化細節由實作類處理。
  */
 @LocalTCC
 public interface TccAction {
